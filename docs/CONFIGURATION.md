@@ -23,8 +23,8 @@ Follow the detailed setup guide at [Building your own RAG chatbot with Upstash](
 ```bash
 NEXT_PUBLIC_ENABLE_SAVE_CHAT_HISTORY=true
 USE_LOCAL_REDIS=false
-UPSTASH_REDIS_REST_URL=[YOUR_UPSTASH_REDIS_REST_URL]
-UPSTASH_REDIS_REST_TOKEN=[YOUR_UPSTASH_REDIS_REST_TOKEN]
+UPSTASH_REDIS_REST_URL=https://first-giraffe-19958.upstash.io
+UPSTASH_REDIS_REST_TOKEN=AU32AAIjcDE3NjliMGRmNGUyM2Q0ZGVlYjRkN2YzNjA5MzI4MzA2Y3AxMA
 ```
 
 ### Using Local Redis
@@ -148,19 +148,19 @@ The `models.json` file contains an array of model configurations with the follow
 ### Google Generative AI
 
 ```bash
-GOOGLE_GENERATIVE_AI_API_KEY=[YOUR_API_KEY]
+GOOGLE_GENERATIVE_AI_API_KEY=AIzaSyCs_95RwJFN6XYV8fffKIW2A1r4rWfOAUM
 ```
 
 ### Anthropic
 
 ```bash
-ANTHROPIC_API_KEY=[YOUR_API_KEY]
+ANTHROPIC_API_KEY=[YOUR_API_KEY] 
 ```
 
 ### Groq
 
 ```bash
-GROQ_API_KEY=[YOUR_API_KEY]
+GROQ_API_KEY=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
 ```
 
 ### Ollama
@@ -179,7 +179,7 @@ AZURE_RESOURCE_NAME=[YOUR_RESOURCE_NAME]
 ### DeepSeek
 
 ```bash
-DEEPSEEK_API_KEY=[YOUR_API_KEY]
+DEEPSEEK_API_KEY=sk-54aa616d7cd74b78a05e886b3e630ee7
 ```
 
 ### Fireworks
@@ -212,7 +212,7 @@ NEXT_PUBLIC_ENABLE_SHARE=true
 ### Video Search
 
 ```bash
-SERPER_API_KEY=[YOUR_API_KEY]
+SERPER_API_KEY=6974b127fa10492317df082592f8b9e6d020b191
 ```
 
 ### Alternative Retrieve Tool

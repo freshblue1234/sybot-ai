@@ -4,29 +4,20 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
 import type { Metadata, Viewport } from 'next'
-import { Inter as FontSans } from 'next/font/google'
 import './globals.css'
-
-const fontSans = FontSans({
-  subsets: ['latin'],
-  variable: '--font-sans'
-})
-
-const title = 'Morphic'
-const description =
-  'A fully open-source AI-powered answer engine with a generative UI.'
+import { Sidebar } from '@/components/sidebar' // Import the Sidebar component
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://morphic.sh'),
-  title,
-  description,
+  metadataBase: new URL('https://sybot.sh'),
+  title: 'sybot',
+  description: 'A fully open-source AI-powered answer engine with a generative UI.',
   openGraph: {
-    title,
-    description
+    title: 'sybot',
+    description: 'A fully open-source AI-powered answer engine with a generative UI.'
   },
   twitter: {
-    title,
-    description,
+    title: 'sybot',
+    description: 'A fully open-source AI-powered answer engine with a generative UI.',
     card: 'summary_large_image',
     creator: '@miiura'
   }
@@ -46,7 +37,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn('font-sans antialiased', fontSans.variable)}>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+      </head>
+      <body className={cn('font-sans antialiased')}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -54,7 +52,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          {children}
+          <div className="flex">
+  <main className="flex-1 pr-64"> {/* Adjust for sidebar width */}
+    {children}
+  </main>
+  <Sidebar />
+</div>
           <Footer />
           <Toaster />
         </ThemeProvider>

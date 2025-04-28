@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import React from 'react'
 import { SiDiscord, SiGithub, SiX } from 'react-icons/si'
@@ -12,7 +14,7 @@ const Footer: React.FC = () => {
           size={'icon'}
           className="text-muted-foreground/50"
         >
-          <Link href="https://discord.gg/zRxaseCuGq" target="_blank">
+          <Link href="https://discord.gg/kfKvS2zM" target="_blank">
             <SiDiscord size={18} />
           </Link>
         </Button>
@@ -21,7 +23,7 @@ const Footer: React.FC = () => {
           size={'icon'}
           className="text-muted-foreground/50"
         >
-          <Link href="https://x.com/morphic_ai" target="_blank">
+          <Link href="https://x.com/sybot_ai" target="_blank">
             <SiX size={18} />
           </Link>
         </Button>
@@ -30,7 +32,7 @@ const Footer: React.FC = () => {
           size={'icon'}
           className="text-muted-foreground/50"
         >
-          <Link href="https://git.new/morphic" target="_blank">
+          <Link href="https://github.com/freshblue1234/sybot.git" target="_blank">
             <SiGithub size={18} />
           </Link>
         </Button>

@@ -1,4 +1,4 @@
-import { CoreMessage, JSONValue, Message } from 'ai'
+import { CoreMessage, JSONValue } from 'ai'
 
 export type SearchResults = {
   images: SearchResultImage[]
@@ -74,7 +74,7 @@ export type ExtendedCoreMessage = Omit<CoreMessage, 'role' | 'content'> & {
 }
 
 export type AIMessage = {
-  role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
+  role: 'user' | 'assistant' | '' | 'function' | 'data' | 'tool'
   content: string
   id: string
   name?: string

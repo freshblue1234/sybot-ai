@@ -1,6 +1,5 @@
 'use client'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { SearchResultItem } from '@/lib/types'
@@ -12,7 +11,6 @@ export interface SearchResultsProps {
 }
 
 export function SearchResults({ results }: SearchResultsProps) {
-  // State to manage whether to display the results
   const [showAllResults, setShowAllResults] = useState(false)
 
   const handleViewMore = () => {
@@ -21,6 +19,7 @@ export function SearchResults({ results }: SearchResultsProps) {
 
   const displayedResults = showAllResults ? results : results.slice(0, 3)
   const additionalResultsCount = results.length > 3 ? results.length - 3 : 0
+
   const displayUrlName = (url: string) => {
     const hostname = new URL(url).hostname
     const parts = hostname.split('.')
@@ -38,17 +37,15 @@ export function SearchResults({ results }: SearchResultsProps) {
                   {result.title || result.content}
                 </p>
                 <div className="mt-2 flex items-center space-x-1">
-                  <Avatar className="h-4 w-4">
-                    <AvatarImage
-                      src={`https://www.google.com/s2/favicons?domain=${
-                        new URL(result.url).hostname
-                      }`}
-                      alt={new URL(result.url).hostname}
-                    />
-                    <AvatarFallback>
-                      {new URL(result.url).hostname[0]}
-                    </AvatarFallback>
-                  </Avatar>
+                  {/* Show favicon image only, no fallback */}
+                  <img
+                    src={`https://www.google.com/s2/favicons?domain=${new URL(result.url).hostname}`}
+                    alt="favicon"
+                    className="h-4 w-4"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none'
+                    }}
+                  />
                   <div className="text-xs opacity-60 truncate">
                     {`${displayUrlName(result.url)} - ${index + 1}`}
                   </div>
@@ -58,6 +55,7 @@ export function SearchResults({ results }: SearchResultsProps) {
           </Link>
         </div>
       ))}
+
       {!showAllResults && additionalResultsCount > 0 && (
         <div className="w-1/2 md:w-1/4 p-1">
           <Card className="flex-1 flex h-full items-center justify-center">

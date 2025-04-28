@@ -11,8 +11,8 @@ import {
   extractReasoningMiddleware,
   wrapLanguageModel
 } from 'ai'
+import 'dotenv/config'
 import { createOllama } from 'ollama-ai-provider'
-
 export const registry = createProviderRegistry({
   openai,
   anthropic,
