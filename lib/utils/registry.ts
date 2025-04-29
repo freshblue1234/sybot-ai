@@ -13,6 +13,8 @@ import {
 } from 'ai'
 import 'dotenv/config'
 import { createOllama } from 'ollama-ai-provider'
+
+// 🔧 Create provider registry with configured providers
 export const registry = createProviderRegistry({
   openai,
   anthropic,
@@ -39,15 +41,16 @@ export const registry = createProviderRegistry({
   xai
 })
 
+// 🔁 Get model with special handling for ollama + reasoning support
 export function getModel(model: string) {
   const [provider, ...modelNameParts] = model.split(':') ?? []
   const modelName = modelNameParts.join(':')
+
   if (model.includes('ollama')) {
     const ollama = createOllama({
       baseURL: `${process.env.OLLAMA_BASE_URL}/api`
     })
 
-    // if model is deepseek-r1, add reasoning middleware
     if (model.includes('deepseek-r1')) {
       return wrapLanguageModel({
         model: ollama(modelName),
@@ -57,13 +60,11 @@ export function getModel(model: string) {
       })
     }
 
-    // if ollama provider, set simulateStreaming to true
     return ollama(modelName, {
       simulateStreaming: true
     })
   }
 
-  // if model is groq and includes deepseek-r1, add reasoning middleware
   if (model.includes('groq') && model.includes('deepseek-r1')) {
     return wrapLanguageModel({
       model: groq(modelName),
@@ -73,7 +74,6 @@ export function getModel(model: string) {
     })
   }
 
-  // if model is fireworks and includes deepseek-r1, add reasoning middleware
   if (model.includes('fireworks') && model.includes('deepseek-r1')) {
     return wrapLanguageModel({
       model: fireworks(modelName),
@@ -83,9 +83,11 @@ export function getModel(model: string) {
     })
   }
 
-  return registry.languageModel(model)
+  // ✅ FIXED: bypass TypeScript strict typing for dynamic strings
+  return registry.languageModel(model as any)
 }
 
+// ✅ Check if provider is enabled via ENV variables
 export function isProviderEnabled(providerId: string): boolean {
   switch (providerId) {
     case 'openai':
@@ -116,9 +118,11 @@ export function isProviderEnabled(providerId: string): boolean {
   }
 }
 
+// 🛠️ Return a default tool-call-compatible model
 export function getToolCallModel(model?: string) {
   const [provider, ...modelNameParts] = model?.split(':') ?? []
   const modelName = modelNameParts.join(':')
+
   switch (provider) {
     case 'deepseek':
       return getModel('deepseek:deepseek-chat')
@@ -139,27 +143,21 @@ export function getToolCallModel(model?: string) {
   }
 }
 
+// 🔍 Determine if the model supports tool calling
 export function isToolCallSupported(model?: string) {
   const [provider, ...modelNameParts] = model?.split(':') ?? []
   const modelName = modelNameParts.join(':')
 
-  if (provider === 'ollama') {
-    return false
-  }
+  if (provider === 'ollama') return false
+  if (provider === 'google') return false
 
-  if (provider === 'google') {
-    return false
-  }
-
-  // Deepseek R1 is not supported
-  // Deepseek v3's tool call is unstable, so we include it in the list
   return !modelName?.includes('deepseek')
 }
 
+// 🧠 Check if a model supports reasoning
 export function isReasoningModel(model: string): boolean {
-  if (typeof model !== 'string') {
-    return false
-  }
+  if (typeof model !== 'string') return false
+
   return (
     model.includes('deepseek-r1') ||
     model.includes('deepseek-reasoner') ||

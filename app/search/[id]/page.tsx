@@ -7,22 +7,23 @@ import { notFound, redirect } from 'next/navigation'
 export const maxDuration = 60
 
 export async function generateMetadata(props: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  const { id } = props.params
+  const { id } = await props.params
   const chat = await getChat(id, 'anonymous')
   return {
     title: chat?.title.toString().slice(0, 50) || 'Search'
   }
 }
-
 export default async function SearchPage(props: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
   const userId = 'anonymous'
-  const { id } = props.params
+  const { id } = await props.params
 
   const chat = await getChat(id, userId)
+  // convertToUIMessages for useChat hook
+  const messages = convertToUIMessages(chat?.messages || [])
 
   if (!chat) {
     redirect('/')
@@ -32,8 +33,6 @@ export default async function SearchPage(props: {
     notFound()
   }
 
-  const messages = convertToUIMessages(chat.messages || [])
   const models = await getModels()
-
   return <Chat id={id} savedMessages={messages} models={models} />
 }

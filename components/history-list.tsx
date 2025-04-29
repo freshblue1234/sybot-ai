@@ -12,7 +12,6 @@ const loadChats = cache(async (userId?: string) => {
   return await getChats(userId)
 })
 
-// Start of Selection
 export async function HistoryList({ userId }: HistoryListProps) {
   const chats = await loadChats(userId)
 
@@ -24,9 +23,7 @@ export async function HistoryList({ userId }: HistoryListProps) {
             No search history
           </div>
         ) : (
-          chats?.map(
-            (chat: Chat) => chat && <HistoryItem key={chat.id} chat={chat} />
-          )
+          chats.map((chat: Chat) => chat && <HistoryItem key={chat.id} chat={chat} />)
         )}
       </div>
       <div className="mt-auto">

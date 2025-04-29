@@ -197,6 +197,9 @@ This will allow you to use Morphic as your default search engine in the browser.
 ### List of models applicable to all
 
 - OpenAI
+  - gpt-4.1
+  - gpt-4.1-mini
+  - gpt-4.1-nano
   - o3-mini
   - gpt-4o
   - gpt-4o-mini
@@ -258,3 +261,4 @@ Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
 - How to submit pull requests
 - Commit message conventions
 - Development setup
+"# Sybot-AI" 

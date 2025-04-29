@@ -19,6 +19,7 @@ const exampleMessages = [
     message: 'Summary: https://arxiv.org/pdf/2501.05707'
   }
 ]
+
 export function EmptyScreen({
   submitMessage,
   className
@@ -33,7 +34,7 @@ export function EmptyScreen({
           {exampleMessages.map((message, index) => (
             <Button
               key={index}
-              variant="link"
+              variant="link"  // Use "link" variant here
               className="h-auto p-0 text-base"
               name={message.message}
               onClick={async () => {

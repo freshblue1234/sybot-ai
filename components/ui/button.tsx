@@ -1,6 +1,6 @@
 // components/ui/button.tsx
-import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
+import { cva, type VariantProps } from 'class-variance-authority'
 import React from 'react'
 
 const buttonVariants = cva(
@@ -13,6 +13,8 @@ const buttonVariants = cva(
         ghost: 'bg-transparent hover:bg-accent text-muted-foreground',
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/80',
         outline: 'border border-input hover:bg-accent hover:text-accent-foreground',
+        // Added the "link" variant
+        link: 'text-blue-500 underline hover:text-blue-600',  // Define the "link" style
       },
       size: {
         default: 'h-10 px-4 py-2',
@@ -32,7 +34,7 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {}
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>( 
   ({ className, variant, size, ...props }, ref) => {
     return (
       <button
@@ -47,3 +49,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = 'Button'
 
 export { Button, buttonVariants }
+
