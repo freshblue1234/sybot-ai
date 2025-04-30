@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import { Sidebar } from '@/components/sidebar' // Import the Sidebar component
+import { Sidebar } from '@/components/sidebar'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://sybot.sh'),
@@ -52,12 +52,19 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          <div className="flex">
-  <main className="flex-1 pr-64"> {/* Adjust for sidebar width */}
-    {children}
-  </main>
-  <Sidebar />
-</div>
+
+          {/* Responsive layout wrapper */}
+          <div className="flex flex-col lg:flex-row min-h-screen">
+            {/* Sidebar: hidden on mobile, shown on lg+ screens */}
+            <aside className="hidden lg:block lg:w-64">
+              <Sidebar />
+            </aside>
+
+            <main className="flex-1 p-4">
+              {children}
+            </main>
+          </div>
+
           <Footer />
           <Toaster />
         </ThemeProvider>
