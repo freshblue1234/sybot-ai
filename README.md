@@ -100,13 +100,13 @@ Models are configured in `public/config/models.json`. Each model requires its co
 Fork the repo to your Github account, then run the following command to clone the repo:
 
 ```bash
-git clone git@github.com:[YOUR_GITHUB_ACCOUNT]/morphic.git
+git clone git@github.com:[YOUR_GITHUB_ACCOUNT]/sybot-ai.git
 ```
 
 ### 2. Install dependencies
 
 ```bash
-cd morphic
+cd sybotai
 bun install
 ```
 
@@ -155,14 +155,14 @@ Host your own live version of Morphic with Vercel, Cloudflare Pages, or Docker.
 Prebuilt Docker images are available on GitHub Container Registry:
 
 ```bash
-docker pull ghcr.io/miurla/morphic:latest
+docker pull ghcr.io/miurla/sybotai:latest
 ```
 
 You can use it with docker-compose:
 
 ```yaml
 services:
-  morphic:
+  sybotai:
     image: ghcr.io/miurla/morphic:latest
     env_file: .env.local
     ports:
@@ -186,7 +186,7 @@ If you want to use Morphic as a search engine in your browser, follow these step
 5. Fill in the fields as follows:
    - **Search engine**: Morphic
    - **Shortcut**: morphic
-   - **URL with %s in place of query**: `https://morphic.sh/search?q=%s`
+   - **URL with %s in place of query**: `https://sybotai.it.com/search?q=%s`
 6. Click "Add" to save the new search engine.
 7. Find "Morphic" in the list of site search, click on the three dots next to it, and select "Make default".
 
@@ -237,7 +237,7 @@ This version of Morphic uses the AI SDK UI implementation, which is recommended 
 
 ### Previous Version: AI SDK RSC (v0.2.34 and earlier)
 
-The React Server Components (RSC) implementation of AI SDK was used in versions up to [v0.2.34](https://github.com/miurla/morphic/releases/tag/v0.2.34) but is now considered experimental and not recommended for production. If you need to reference the RSC implementation, please check the v0.2.34 release tag.
+The React Server Components (RSC) implementation of AI SDK was used in versions up to [v0.2.34](https://github.com/freshblue1234/sybot-ai/releases/tag/v0.2.34) but is now considered experimental and not recommended for production. If you need to reference the RSC implementation, please check the v0.2.34 release tag.
 
 > Note: v0.2.34 was the final version using RSC implementation before migrating to AI SDK UI.
 
@@ -249,7 +249,7 @@ Morphic is open source software available under the Apache-2.0 license.
 
 To maintain sustainable development and provide cloud-ready features, we offer a hosted version of Morphic alongside our open-source offering. The cloud solution makes Morphic accessible to non-technical users and provides additional features while keeping the core functionality open and available for developers.
 
-For our cloud service, visit [morphic.sh](https://morphic.sh).
+For our cloud service, visit [morphic.sh](https://sybotai.it.com).
 
 ## 👥 Contributing
 
