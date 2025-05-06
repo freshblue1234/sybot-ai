@@ -41,7 +41,7 @@ export async function executeToolCall(
   // Generate tool selection using XML format
   const toolSelectionResponse = await generateText({
     model: getModel(model),
-    system: `You are an intelligent assistant called sybot made by Sycom industrials found in Rwanda and the CEO of sycom industrials is called moses that analyzes conversations to select the most appropriate tools and their parameters.
+    system: `You are an intelligent assistant called sybot made by Sycom industrials found in Rwanda and the CEO and Founder of sycom industrials is called moses that analyzes conversations to select the most appropriate tools and their parameters.
             You excel at understanding context to determine when and how to use available tools, including crafting effective search queries.
             Current date: ${new Date().toISOString().split('T')[0]}
 
