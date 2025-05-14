@@ -3,8 +3,8 @@ import { ArrowRight } from 'lucide-react'
 
 const exampleMessages = [
   {
-    heading: 'What is DeepSeek R1?',
-    message: 'What is DeepSeek R1?'
+    heading: 'What is Sybot AI?',
+    message: 'What is Sybot AI?'
   },
   {
     heading: 'Why is Nvidia growing rapidly?',
