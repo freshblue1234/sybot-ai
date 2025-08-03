@@ -2,11 +2,19 @@
 
 import { Button } from '@/components/ui/button'
 import {
+<<<<<<< HEAD
     Sheet,
     SheetContent,
     SheetHeader,
     SheetTitle,
     SheetTrigger
+=======
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 } from '@/components/ui/sheet'
 import { History as HistoryIcon, Menu } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -32,6 +40,7 @@ export function History({ children }: HistoryProps) {
   return (
     <Sheet onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
+<<<<<<< HEAD
         <Button 
           variant="ghost" 
           size="icon"
@@ -50,6 +59,20 @@ export function History({ children }: HistoryProps) {
           </SheetTitle>
         </SheetHeader>
         <div className="my-4 h-full pb-16 overflow-y-auto">
+=======
+        <Button variant="ghost" size="icon">
+          <Menu />
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="w-64 rounded-tl-xl rounded-bl-xl">
+        <SheetHeader>
+          <SheetTitle className="flex items-center gap-1 text-sm font-normal mb-2">
+            <HistoryIcon size={14} />
+            History
+          </SheetTitle>
+        </SheetHeader>
+        <div className="my-2 h-full pb-12 md:pb-10">
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
           <Suspense fallback={<HistorySkeleton />}>{children}</Suspense>
         </div>
       </SheetContent>

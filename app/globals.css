@@ -5,7 +5,11 @@
 @layer base {
   :root {
     /* Light Mode Colors */
+<<<<<<< HEAD
     --background: 0 0% 100%;
+=======
+    --background: 0 0% 98%;
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
     --foreground: 220 15% 20%;
     --card: 0 0% 100%;
     --card-foreground: 220 15% 25%;
@@ -78,6 +82,7 @@
     --accent-blue-border: 210 100% 40%;
   }
 
+<<<<<<< HEAD
   * {
     @apply border-border;
   }
@@ -148,5 +153,14 @@
 
   .mobile-optimized {
     @apply sm:text-sm lg:text-base;
+=======
+  body {
+    font-family: 'Inter', sans-serif;
+    @apply bg-background text-foreground;
+  }
+
+  * {
+    @apply border-border;
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
   }
 }

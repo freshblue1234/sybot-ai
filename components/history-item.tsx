@@ -1,5 +1,6 @@
 'use client'
 
+<<<<<<< HEAD
 import { Chat } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { Clock, MessageSquare, MoreVertical, Trash2 } from 'lucide-react'
@@ -27,6 +28,16 @@ import {
 type HistoryItemProps = {
   chat: Chat
   onDelete?: (chatId: string) => void
+=======
+import React from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Chat } from '@/lib/types'
+import { cn } from '@/lib/utils'
+
+type HistoryItemProps = {
+  chat: Chat
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 }
 
 const formatDateWithTime = (date: Date | string) => {
@@ -67,6 +78,7 @@ const formatDateWithTime = (date: Date | string) => {
   }
 }
 
+<<<<<<< HEAD
 const HistoryItem: React.FC<HistoryItemProps> = ({ chat, onDelete }) => {
   const pathname = usePathname()
   const router = useRouter()
@@ -168,6 +180,27 @@ const HistoryItem: React.FC<HistoryItemProps> = ({ chat, onDelete }) => {
         </AlertDialogContent>
       </AlertDialog>
     </>
+=======
+const HistoryItem: React.FC<HistoryItemProps> = ({ chat }) => {
+  const pathname = usePathname()
+  const isActive = pathname === chat.path
+
+  return (
+    <Link
+      href={chat.path}
+      className={cn(
+        'flex flex-col hover:bg-muted cursor-pointer p-2 rounded border',
+        isActive ? 'bg-muted/70 border-border' : 'border-transparent'
+      )}
+    >
+      <div className="text-xs font-medium truncate select-none">
+        {chat.title}
+      </div>
+      <div className="text-xs text-muted-foreground">
+        {formatDateWithTime(chat.createdAt)}
+      </div>
+    </Link>
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
   )
 }
 

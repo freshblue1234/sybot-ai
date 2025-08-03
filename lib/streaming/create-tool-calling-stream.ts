@@ -1,10 +1,18 @@
 import { researcher } from '@/lib/agents/researcher'
 import {
+<<<<<<< HEAD
     convertToCoreMessages,
     CoreMessage,
     createDataStreamResponse,
     DataStreamWriter,
     streamText
+=======
+  convertToCoreMessages,
+  CoreMessage,
+  createDataStreamResponse,
+  DataStreamWriter,
+  streamText
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 } from 'ai'
 import { getMaxAllowedTokens, truncateMessages } from '../utils/context-window'
 import { isReasoningModel } from '../utils/registry'
@@ -24,6 +32,7 @@ function containsAskQuestionTool(message: CoreMessage) {
   )
 }
 
+<<<<<<< HEAD
 // Demo response generator for when no API keys are available
 function generateDemoResponse(userMessage: string): string {
   const lowerMessage = userMessage.toLowerCase()
@@ -110,6 +119,8 @@ Would you like me to help you set up an API key, or do you have any other questi
 For now, I can help you understand my capabilities and guide you through the setup process. What would you like to know?`
 }
 
+=======
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 export function createToolCallingStreamResponse(config: BaseStreamConfig) {
   return createDataStreamResponse({
     execute: async (dataStream: DataStreamWriter) => {
@@ -117,6 +128,7 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
       const modelId = `${model.providerId}:${model.id}`
 
       try {
+<<<<<<< HEAD
         // Check if we have any API keys configured
         const hasApiKeys = process.env.OPENAI_API_KEY || 
                           process.env.ANTHROPIC_API_KEY || 
@@ -153,6 +165,8 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
           return
         }
 
+=======
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
         const coreMessages = convertToCoreMessages(messages)
         const truncatedMessages = truncateMessages(
           coreMessages,
@@ -192,6 +206,7 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
         result.mergeIntoDataStream(dataStream)
       } catch (error) {
         console.error('Stream execution error:', error)
+<<<<<<< HEAD
         
         // Provide helpful error message in demo mode
         const errorMessage = `I encountered an error while processing your request. This might be because:
@@ -213,6 +228,9 @@ Error details: ${error instanceof Error ? error.message : String(error)}`
         })
         
         dataStream.write({ type: 'done' })
+=======
+        throw error
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
       }
     },
     onError: error => {

@@ -2,6 +2,7 @@
 export const dynamic = 'force-dynamic'
 
 import { Chat } from '@/components/chat'
+<<<<<<< HEAD
 import { getChats } from '@/lib/actions/chat'
 import { getModels } from '@/lib/config/models'
 import { convertToUIMessages } from '@/lib/utils'
@@ -82,4 +83,13 @@ export default async function HomePage() {
       </div>
     </div>
   )
+=======
+import { getModels } from '@/lib/config/models'
+import { generateId } from 'ai'
+
+export default async function Page() {
+  const id = generateId() // generate a unique id
+  const models = await getModels() // fetch models
+  return <Chat id={id} models={models} />
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 }

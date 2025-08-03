@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 'use client'
 
 import { deleteChat, getChats } from '@/lib/actions/chat'
@@ -9,6 +10,13 @@ import { ClearHistory } from './clear-history'
 import HistoryItem from './history-item'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
+=======
+import React, { cache } from 'react'
+import HistoryItem from './history-item'
+import { Chat } from '@/lib/types'
+import { getChats } from '@/lib/actions/chat'
+import { ClearHistory } from './clear-history'
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 
 type HistoryListProps = {
   userId?: string
@@ -21,6 +29,7 @@ const loadChats = cache(async (userId?: string) => {
 export async function HistoryList({ userId }: HistoryListProps) {
   const chats = await loadChats(userId)
 
+<<<<<<< HEAD
   return <HistoryListClient chats={chats || []} userId={userId} />
 }
 
@@ -137,6 +146,21 @@ function HistoryListClient({ chats, userId }: { chats: Chat[], userId?: string }
       {/* Footer with clear all button */}
       <div className="mt-auto pt-4 border-t border-border/50">
         <ClearHistory empty={filteredChats.length === 0} />
+=======
+  return (
+    <div className="flex flex-col flex-1 space-y-3 h-full">
+      <div className="flex flex-col space-y-0.5 flex-1 overflow-y-auto">
+        {!chats?.length ? (
+          <div className="text-foreground/30 text-sm text-center py-4">
+            No search history
+          </div>
+        ) : (
+          chats.map((chat: Chat) => chat && <HistoryItem key={chat.id} chat={chat} />)
+        )}
+      </div>
+      <div className="mt-auto">
+        <ClearHistory empty={!chats?.length} />
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
       </div>
     </div>
   )

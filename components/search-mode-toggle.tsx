@@ -2,7 +2,11 @@
 
 import { cn } from '@/lib/utils'
 import { getCookie, setCookie } from '@/lib/utils/cookies'
+<<<<<<< HEAD
 import { Globe, Search } from 'lucide-react'
+=======
+import { Globe } from 'lucide-react'
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 import { useEffect, useState } from 'react'
 import { Toggle } from './ui/toggle'
 
@@ -28,6 +32,7 @@ export function SearchModeToggle() {
       onPressedChange={handleSearchModeChange}
       variant="outline"
       className={cn(
+<<<<<<< HEAD
         'h-8 px-2 gap-1.5 border border-border/50 text-muted-foreground bg-background/50 backdrop-blur-sm',
         'data-[state=on]:bg-accent-blue data-[state=on]:text-accent-blue-foreground',
         'data-[state=on]:border-accent-blue-border data-[state=on]:shadow-sm',
@@ -43,6 +48,17 @@ export function SearchModeToggle() {
       <span className="text-xs font-medium hidden sm:inline lg:text-sm">
         {isSearchMode ? 'Search' : 'Chat'}
       </span>
+=======
+        'gap-1 px-3 border border-input text-muted-foreground bg-background',
+        'data-[state=on]:bg-accent-blue',
+        'data-[state=on]:text-accent-blue-foreground',
+        'data-[state=on]:border-accent-blue-border',
+        'hover:bg-accent hover:text-accent-foreground rounded-full'
+      )}
+    >
+      <Globe className="size-4" />
+      <span className="text-xs">Search</span>
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
     </Toggle>
   )
 }

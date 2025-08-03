@@ -1,9 +1,17 @@
 import {
+<<<<<<< HEAD
     convertToCoreMessages,
     createDataStreamResponse,
     DataStreamWriter,
     JSONValue,
     streamText
+=======
+  convertToCoreMessages,
+  createDataStreamResponse,
+  DataStreamWriter,
+  JSONValue,
+  streamText
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 } from 'ai'
 import { manualResearcher } from '../agents/manual-researcher'
 import { ExtendedCoreMessage } from '../types'
@@ -12,6 +20,7 @@ import { handleStreamFinish } from './handle-stream-finish'
 import { executeToolCall } from './tool-execution'
 import { BaseStreamConfig } from './types'
 
+<<<<<<< HEAD
 // Demo response generator for when no API keys are available
 function generateDemoResponse(userMessage: string): string {
   const lowerMessage = userMessage.toLowerCase()
@@ -98,6 +107,8 @@ Would you like me to help you set up an API key, or do you have any other questi
 For now, I can help you understand my capabilities and guide you through the setup process. What would you like to know?`
 }
 
+=======
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 export function createManualToolStreamResponse(config: BaseStreamConfig) {
   return createDataStreamResponse({
     execute: async (dataStream: DataStreamWriter) => {
@@ -108,6 +119,7 @@ export function createManualToolStreamResponse(config: BaseStreamConfig) {
         : modelId
 
       try {
+<<<<<<< HEAD
         // Check if we have any API keys configured
         const hasApiKeys = process.env.OPENAI_API_KEY || 
                           process.env.ANTHROPIC_API_KEY || 
@@ -144,6 +156,8 @@ export function createManualToolStreamResponse(config: BaseStreamConfig) {
           return
         }
 
+=======
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
         const coreMessages = convertToCoreMessages(messages)
         const truncatedMessages = truncateMessages(
           coreMessages,
@@ -221,6 +235,7 @@ export function createManualToolStreamResponse(config: BaseStreamConfig) {
         })
       } catch (error) {
         console.error('Stream execution error:', error)
+<<<<<<< HEAD
         
         // Provide helpful error message in demo mode
         const errorMessage = `I encountered an error while processing your request. This might be because:
@@ -245,6 +260,12 @@ Error details: ${error instanceof Error ? error.message : String(error)}`
       }
     },
     onError: error => {
+=======
+      }
+    },
+    onError: error => {
+      console.error('Stream error:', error)
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
       return error instanceof Error ? error.message : String(error)
     }
   })

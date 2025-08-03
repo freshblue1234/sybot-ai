@@ -1,5 +1,6 @@
 'use client'
 
+<<<<<<< HEAD
 import {
     AlertDialog,
     AlertDialogAction,
@@ -15,6 +16,22 @@ import { Button } from '@/components/ui/button'
 import { clearChats } from '@/lib/actions/chat'
 import { Trash2 } from 'lucide-react'
 import { useState, useTransition } from 'react'
+=======
+import { useState, useTransition } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+import { clearChats } from '@/lib/actions/chat'
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 import { toast } from 'sonner'
 import { Spinner } from './ui/spinner'
 
@@ -25,6 +42,7 @@ type ClearHistoryProps = {
 export function ClearHistory({ empty }: ClearHistoryProps) {
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
+<<<<<<< HEAD
   
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -61,6 +79,27 @@ export function ClearHistory({ empty }: ClearHistoryProps) {
           <AlertDialogAction
             disabled={isPending}
             className="h-9 px-4 text-sm bg-destructive text-destructive-foreground hover:bg-destructive/90"
+=======
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <Button variant="outline" className="w-full" disabled={empty}>
+          Clear History
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete your
+            history and remove your data from our servers.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            disabled={isPending}
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
             onClick={event => {
               event.preventDefault()
               startTransition(async () => {
@@ -68,12 +107,17 @@ export function ClearHistory({ empty }: ClearHistoryProps) {
                 if (result?.error) {
                   toast.error(result.error)
                 } else {
+<<<<<<< HEAD
                   toast.success('History cleared successfully')
+=======
+                  toast.success('History cleared')
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
                 }
                 setOpen(false)
               })
             }}
           >
+<<<<<<< HEAD
             {isPending ? (
               <div className="flex items-center gap-2">
                 <Spinner />
@@ -82,6 +126,9 @@ export function ClearHistory({ empty }: ClearHistoryProps) {
             ) : (
               'Clear History'
             )}
+=======
+            {isPending ? <Spinner /> : 'Clear'}
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

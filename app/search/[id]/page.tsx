@@ -9,6 +9,7 @@ export const maxDuration = 60
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>
 }) {
+<<<<<<< HEAD
   try {
     const { id } = await props.params
     const chat = await getChat(id, 'anonymous')
@@ -23,12 +24,21 @@ export async function generateMetadata(props: {
   }
 }
 
+=======
+  const { id } = await props.params
+  const chat = await getChat(id, 'anonymous')
+  return {
+    title: chat?.title.toString().slice(0, 50) || 'Search'
+  }
+}
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 export default async function SearchPage(props: {
   params: Promise<{ id: string }>
 }) {
   const userId = 'anonymous'
   const { id } = await props.params
 
+<<<<<<< HEAD
   try {
     const chat = await getChat(id, userId)
     
@@ -51,4 +61,20 @@ export default async function SearchPage(props: {
     // If there's an error, redirect to home page
     redirect('/')
   }
+=======
+  const chat = await getChat(id, userId)
+  // convertToUIMessages for useChat hook
+  const messages = convertToUIMessages(chat?.messages || [])
+
+  if (!chat) {
+    redirect('/')
+  }
+
+  if (chat?.userId !== userId) {
+    notFound()
+  }
+
+  const models = await getModels()
+  return <Chat id={id} savedMessages={messages} models={models} />
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 }

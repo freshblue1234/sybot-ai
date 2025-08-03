@@ -1,7 +1,11 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+<<<<<<< HEAD
 import { Github, HelpCircle, Menu, MessageSquare, Settings, X } from 'lucide-react'
+=======
+import { Menu } from 'lucide-react'
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 import { useEffect, useState } from 'react'
 import HistoryContainer from './history-container'
 
@@ -22,16 +26,25 @@ export function Sidebar() {
 
   return (
     <>
+<<<<<<< HEAD
       {/* Mobile Menu Button */}
       <Button 
         variant="ghost" 
         size="icon"
         className="fixed top-20 left-4 z-50 lg:hidden bg-background/80 backdrop-blur-sm border border-border/50 shadow-lg hover:shadow-xl transition-all duration-200"
+=======
+      {/* Menu Button */}
+      <Button 
+        variant="ghost" 
+        size="icon"
+        className="fixed top-14 left-4 z-50"
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
         onClick={() => setIsOpen(true)}
       >
         <Menu className="h-5 w-5" />
       </Button>
 
+<<<<<<< HEAD
       {/* Mobile Sidebar Modal */}
       {isOpen && (
         <>
@@ -113,6 +126,27 @@ export function Sidebar() {
           </div>
         </div>
       </div>
+=======
+      {/* Sidebar Modal */}
+      {isOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="h-[85vh] p-4 fixed top-24 left-0 flex flex-col w-64 bg-background border-r border-border z-50 rounded-r-lg">
+            <HistoryContainer /> {/* ✅ Fixed line */}
+            <Button
+              variant="ghost"
+              className="mt-auto"
+              onClick={() => setIsOpen(false)}
+            >
+              Close
+            </Button>
+          </div>
+        </>
+      )}
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
     </>
   )
 }

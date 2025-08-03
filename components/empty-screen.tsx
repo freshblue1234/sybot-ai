@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { Bot, Globe, Lightbulb, Search, Sparkles, Zap } from 'lucide-react'
@@ -102,6 +103,56 @@ export function EmptyScreen() {
             <span className="px-2 py-1 bg-muted rounded-full">Real-time</span>
           </div>
         </div>
+=======
+import { Button } from '@/components/ui/button'
+import { ArrowRight } from 'lucide-react'
+
+const exampleMessages = [
+  {
+    heading: 'What is Sybot AI?',
+    message: 'What is Sybot AI?'
+  },
+  {
+    heading: 'Why is Nvidia growing rapidly?',
+    message: 'Why is Nvidia growing rapidly?'
+  },
+  {
+    heading: 'Tesla vs Rivian',
+    message: 'Tesla vs Rivian'
+  },
+  {
+    heading: 'Summary: https://arxiv.org/pdf/2501.05707',
+    message: 'Summary: https://arxiv.org/pdf/2501.05707'
+  }
+]
+
+export function EmptyScreen({
+  submitMessage,
+  className
+}: {
+  submitMessage: (message: string) => void
+  className?: string
+}) {
+  return (
+    <div className={`mx-auto w-full transition-all ${className}`}>
+      <div className="bg-background p-2">
+        <div className="mt-2 flex flex-col items-start space-y-2 mb-4">
+          {exampleMessages.map((message, index) => (
+            <Button
+              key={index}
+              variant="link"  // Use "link" variant here
+              className="h-auto p-0 text-base"
+              name={message.message}
+              onClick={async () => {
+                submitMessage(message.message)
+              }}
+            >
+              <ArrowRight size={16} className="mr-2 text-muted-foreground" />
+              {message.heading}
+            </Button>
+          ))}
+        </div>
+>>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
       </div>
     </div>
   )
