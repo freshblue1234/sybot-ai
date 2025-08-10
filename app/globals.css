@@ -5,11 +5,7 @@
 @layer base {
   :root {
     /* Light Mode Colors */
-<<<<<<< HEAD
-    --background: 0 0% 100%;
-=======
     --background: 0 0% 98%;
->>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
     --foreground: 220 15% 20%;
     --card: 0 0% 100%;
     --card-foreground: 220 15% 25%;
@@ -82,78 +78,6 @@
     --accent-blue-border: 210 100% 40%;
   }
 
-<<<<<<< HEAD
-  * {
-    @apply border-border;
-  }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    @apply bg-background text-foreground;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/20 rounded-full;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/30;
-  }
-
-  /* Mobile optimizations */
-  @media (max-width: 768px) {
-    html {
-      font-size: 14px;
-    }
-  }
-
-  /* Focus styles */
-  *:focus-visible {
-    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
-  }
-
-  /* Selection styles */
-  ::selection {
-    @apply bg-primary/20 text-foreground;
-  }
-
-  /* Smooth transitions */
-  * {
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-  }
-}
-
-@layer components {
-  /* Custom component styles */
-  .glass-effect {
-    @apply bg-background/80 backdrop-blur-sm border border-border/50;
-  }
-
-  .gradient-text {
-    @apply bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent;
-  }
-
-  .hover-lift {
-    @apply transition-all duration-200 hover:scale-105 hover:shadow-lg;
-  }
-
-  .mobile-optimized {
-    @apply sm:text-sm lg:text-base;
-=======
   body {
     font-family: 'Inter', sans-serif;
     @apply bg-background text-foreground;
@@ -161,6 +85,5 @@
 
   * {
     @apply border-border;
->>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
   }
 }

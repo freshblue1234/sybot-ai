@@ -26,19 +26,10 @@
         "./*"
       ]
     },
-<<<<<<< HEAD
-    "target": "ES2017",
-    "types": ["node"]
-  },
-  "include": [
-    "next-env.d.ts",
-    "types/**/*.d.ts",
-=======
     "target": "ES2017"
   },
   "include": [
     "next-env.d.ts",
->>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"

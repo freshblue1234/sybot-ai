@@ -9,59 +9,18 @@ export const maxDuration = 60
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>
 }) {
-<<<<<<< HEAD
-  try {
-    const { id } = await props.params
-    const chat = await getChat(id, 'anonymous')
-    return {
-      title: chat?.title?.toString().slice(0, 50) || 'Search'
-    }
-  } catch (error) {
-    console.warn('Error generating metadata:', error)
-    return {
-      title: 'Search'
-    }
-  }
-}
-
-=======
   const { id } = await props.params
   const chat = await getChat(id, 'anonymous')
   return {
     title: chat?.title.toString().slice(0, 50) || 'Search'
   }
 }
->>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 export default async function SearchPage(props: {
   params: Promise<{ id: string }>
 }) {
   const userId = 'anonymous'
   const { id } = await props.params
 
-<<<<<<< HEAD
-  try {
-    const chat = await getChat(id, userId)
-    
-    // If chat is not found, redirect to home
-    if (!chat) {
-      redirect('/')
-    }
-
-    if (chat?.userId !== userId) {
-      notFound()
-    }
-
-    // convertToUIMessages for useChat hook
-    const messages = convertToUIMessages(chat?.messages || [])
-    const models = await getModels()
-    
-    return <Chat id={id} savedMessages={messages} models={models} />
-  } catch (error) {
-    console.error('Error loading search page:', error)
-    // If there's an error, redirect to home page
-    redirect('/')
-  }
-=======
   const chat = await getChat(id, userId)
   // convertToUIMessages for useChat hook
   const messages = convertToUIMessages(chat?.messages || [])
@@ -76,5 +35,4 @@ export default async function SearchPage(props: {
 
   const models = await getModels()
   return <Chat id={id} savedMessages={messages} models={models} />
->>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 }
