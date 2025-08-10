@@ -69,6 +69,7 @@ export const RelatedQuestions: React.FC<RelatedQuestionsProps> = ({
       onOpenChange={onOpenChange}
       showIcon={false}
       showBorder={false}
+      className="my-6"
     >
       <Section title="Related" className="pt-0 pb-8">
         <div className="flex flex-col">

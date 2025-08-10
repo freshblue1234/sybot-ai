@@ -14,6 +14,7 @@ interface RenderMessageProps {
   onQuerySelect: (query: string) => void
   chatId?: string
   addToolResult?: (params: { toolCallId: string; result: any }) => void
+  messageIndex?: number
 }
 
 export function RenderMessage({
@@ -23,7 +24,8 @@ export function RenderMessage({
   onOpenChange,
   onQuerySelect,
   chatId,
-  addToolResult
+  addToolResult,
+  messageIndex = 0
 }: RenderMessageProps) {
   const relatedQuestions = useMemo(
     () =>
@@ -91,7 +93,7 @@ export function RenderMessage({
   }, [reasoningAnnotation])
 
   if (message.role === 'user') {
-    return <UserMessage message={message.content} />
+    return <UserMessage message={message.content} messageIndex={messageIndex} />
   }
 
   // New way: Use parts instead of toolInvocations
@@ -133,6 +135,7 @@ export function RenderMessage({
                 onOpenChange={open => onOpenChange(messageId, open)}
                 chatId={chatId}
                 showActions={isLastPart}
+                messageIndex={messageIndex}
               />
             )
           case 'reasoning':

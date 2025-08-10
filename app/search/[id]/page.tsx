@@ -2,6 +2,7 @@ import { Chat } from '@/components/chat'
 import { getChat } from '@/lib/actions/chat'
 import { getModels } from '@/lib/config/models'
 import { convertToUIMessages } from '@/lib/utils'
+import { ExtendedCoreMessage } from '@/lib/types'
 import { notFound, redirect } from 'next/navigation'
 
 export const maxDuration = 60
@@ -21,7 +22,25 @@ export default async function SearchPage(props: {
   const userId = 'anonymous'
   const { id } = await props.params
 
-  const chat = await getChat(id, userId)
+  const MOCK_CHAT = {
+    id: 'mock',
+    userId: 'anonymous',
+    title: 'Mock Search',
+    path: '/search/mock',
+    messages: [],
+    createdAt: new Date(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  let chat;
+  try {
+    chat = await getChat(id, userId);
+  } catch (err) {
+    chat = null;
+  }
+  if (!chat || !chat.messages) {
+    chat = MOCK_CHAT;
+  }
   // convertToUIMessages for useChat hook
   const messages = convertToUIMessages(chat?.messages || [])
 

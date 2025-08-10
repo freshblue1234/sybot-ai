@@ -7,8 +7,8 @@ import rehypeKatex from 'rehype-katex'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import { Citing } from './custom-link'
-import { CodeBlock } from './ui/codeblock'
 import { MemoizedReactMarkdown } from './ui/markdown'
+import { ExecutableCodeBlock } from './ui/executable-codeblock'
 
 export function BotMessage({
   message,
@@ -74,7 +74,7 @@ export function BotMessage({
           }
 
           return (
-            <CodeBlock
+            <ExecutableCodeBlock
               key={Math.random()}
               language={(match && match[1]) || ''}
               value={String(children).replace(/\n$/, '')}

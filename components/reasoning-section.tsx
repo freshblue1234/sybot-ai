@@ -61,6 +61,7 @@ export function ReasoningSection({
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         showBorder={true}
+        className="my-6"
       >
         <BotMessage
           message={content.reasoning}

@@ -48,6 +48,7 @@ export function SearchSection({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       showIcon={false}
+      className="my-6"
     >
       {searchResults &&
         searchResults.images &&

@@ -7,19 +7,22 @@ import { Copy } from 'lucide-react'
 import { toast } from 'sonner'
 import { ChatShare } from './chat-share'
 import { Button } from './ui/button'
+import { VoiceOutputButton } from './voice-controls'
 
 interface MessageActionsProps {
   message: string
   chatId?: string
   enableShare?: boolean
   className?: string
+  messageIndex?: number
 }
 
 export function MessageActions({
   message,
   chatId,
   enableShare,
-  className
+  className,
+  messageIndex = 0
 }: MessageActionsProps) {
   const { isLoading } = useChat({
     id: CHAT_ID
@@ -35,6 +38,7 @@ export function MessageActions({
 
   return (
     <div className={cn('flex items-center gap-0.5 self-end', className)}>
+      <VoiceOutputButton text={message} messageIndex={messageIndex} />
       <Button
         variant="ghost"
         size="icon"

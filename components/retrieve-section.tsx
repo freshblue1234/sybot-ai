@@ -33,6 +33,7 @@ export function RetrieveSection({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       showIcon={false}
+      className="my-6"
     >
       {!isLoading && data ? (
         <Section title="Sources">

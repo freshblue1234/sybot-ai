@@ -13,8 +13,7 @@ const buttonVariants = cva(
         ghost: 'bg-transparent hover:bg-accent text-muted-foreground',
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/80',
         outline: 'border border-input hover:bg-accent hover:text-accent-foreground',
-        // Added the "link" variant
-        link: 'text-blue-500 underline hover:text-blue-600',  // Define the "link" style
+        link: 'text-blue-500 underline hover:text-blue-600',
       },
       size: {
         default: 'h-10 px-4 py-2',
@@ -32,16 +31,30 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>( 
-  ({ className, variant, size, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? React.Fragment : 'button'
+    const buttonProps = asChild ? {} : { ref, ...props }
+    
     return (
-      <button
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
+      <Comp {...buttonProps}>
+        {asChild ? (
+          React.cloneElement(props.children as React.ReactElement, {
+            className: cn(buttonVariants({ variant, size, className })),
+            ...props
+          })
+        ) : (
+          <button
+            className={cn(buttonVariants({ variant, size, className }))}
+            ref={ref}
+            {...props}
+          />
+        )}
+      </Comp>
     )
   }
 )

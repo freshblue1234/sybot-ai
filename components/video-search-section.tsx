@@ -33,6 +33,7 @@ export function VideoSearchSection({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       showIcon={false}
+      className="my-6"
     >
       {!isLoading && searchResults ? (
         <Section title="Videos">
