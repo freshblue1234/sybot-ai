@@ -3,18 +3,12 @@ import { CollapsibleMessage } from './collapsible-message'
 
 type UserMessageProps = {
   message: string
-  messageIndex?: number
 }
 
-export const UserMessage: React.FC<UserMessageProps> = ({
-  message,
-  messageIndex = 0
-}) => {
+export const UserMessage: React.FC<UserMessageProps> = ({ message }) => {
   return (
-    <CollapsibleMessage 
-      role="user" 
-      content={<div className="flex-1 break-words w-full">{message}</div>}
-      messageIndex={messageIndex}
-    />
+    <CollapsibleMessage role="user">
+      <div className="flex-1 break-words w-full">{message}</div>
+    </CollapsibleMessage>
   )
 }

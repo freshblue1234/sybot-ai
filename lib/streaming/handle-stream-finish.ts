@@ -74,23 +74,15 @@ export async function handleStreamFinish({
       createdAt: new Date(),
       userId: 'anonymous',
       path: `/search/${chatId}`,
-      title: originalMessages[0]?.content || 'New Chat',
+      title: originalMessages[0].content,
       id: chatId
     }
 
-    // Ensure all required properties are present
-    const chatToSave = {
-      id: chatId,
-      title: savedChat.title || originalMessages[0]?.content || 'New Chat',
-      createdAt: savedChat.createdAt || new Date(),
-      userId: savedChat.userId || 'anonymous',
-      path: savedChat.path || `/search/${chatId}`,
-      messages: generatedMessages,
-      sharePath: (savedChat as any).sharePath
-    }
-
     // Save chat with complete response and related questions
-    await saveChat(chatToSave).catch(error => {
+    await saveChat({
+      ...savedChat,
+      messages: generatedMessages
+    }).catch(error => {
       console.error('Failed to save chat:', error)
       throw new Error('Failed to save chat history')
     })

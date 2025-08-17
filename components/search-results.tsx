@@ -39,10 +39,12 @@ export function SearchResults({ results }: SearchResultsProps) {
                 <div className="mt-2 flex items-center space-x-1">
                   {/* Show favicon image only, no fallback */}
                   <img
-                    src={`https://www.google.com/s2/favicons?domain=${new URL(result.url).hostname}`}
+                    src={`https://www.google.com/s2/favicons?domain=${
+                      new URL(result.url).hostname
+                    }`}
                     alt="favicon"
                     className="h-4 w-4"
-                    onError={(e) => {
+                    onError={e => {
                       e.currentTarget.style.display = 'none'
                     }}
                   />

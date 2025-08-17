@@ -1,13 +1,58 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
+import { Slider } from '@/components/ui/slider'
+import { Switch } from '@/components/ui/switch'
+import { useVoice } from '@/contexts/voice-context'
 import { cn } from '@/lib/utils'
-import { AlertCircle, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
+import { Mic, MicOff, Settings, Volume2, VolumeX } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Badge } from './ui/badge'
-import { Button } from './ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 
-// Supported languages
+interface VoiceControlsProps {
+  onVoiceInput: (text: string) => void
+}
+
+// Client-side only wrapper to prevent hydration mismatches
+function VoiceControlsClient({ onVoiceInput }: VoiceControlsProps) {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return (
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="icon" className="h-8 w-8 lg:h-9 lg:w-9" disabled>
+          <Mic size={16} />
+        </Button>
+        <Button variant="outline" size="icon" className="h-8 w-8 lg:h-9 lg:w-9" disabled>
+          <Volume2 size={16} />
+        </Button>
+        <Button variant="outline" size="icon" className="h-8 w-8 lg:h-9 lg:w-9" disabled>
+          <Settings size={16} />
+        </Button>
+      </div>
+    )
+  }
+
+  return <VoiceControlsInner onVoiceInput={onVoiceInput} />
+}
+
+// Supported languages for speech recognition and synthesis
 const LANGUAGES = [
   { code: 'en-US', name: 'English (US)', flag: '🇺🇸' },
   { code: 'en-GB', name: 'English (UK)', flag: '🇬🇧' },
@@ -15,234 +60,342 @@ const LANGUAGES = [
   { code: 'fr-FR', name: 'French', flag: '🇫🇷' },
   { code: 'de-DE', name: 'German', flag: '🇩🇪' },
   { code: 'it-IT', name: 'Italian', flag: '🇮🇹' },
-  { code: 'pt-BR', name: 'Portuguese', flag: '🇧🇷' },
+  { code: 'pt-BR', name: 'Portuguese (Brazil)', flag: '🇧🇷' },
+  { code: 'pt-PT', name: 'Portuguese (Portugal)', flag: '🇵🇹' },
   { code: 'ru-RU', name: 'Russian', flag: '🇷🇺' },
   { code: 'ja-JP', name: 'Japanese', flag: '🇯🇵' },
   { code: 'ko-KR', name: 'Korean', flag: '🇰🇷' },
-  { code: 'zh-CN', name: 'Chinese', flag: '🇨🇳' },
+  { code: 'zh-CN', name: 'Chinese (Simplified)', flag: '🇨🇳' },
+  { code: 'zh-TW', name: 'Chinese (Traditional)', flag: '🇹🇼' },
   { code: 'ar-SA', name: 'Arabic', flag: '🇸🇦' },
   { code: 'hi-IN', name: 'Hindi', flag: '🇮🇳' },
   { code: 'tr-TR', name: 'Turkish', flag: '🇹🇷' },
-  { code: 'nl-NL', name: 'Dutch', flag: '🇳🇱' }
+  { code: 'nl-NL', name: 'Dutch', flag: '🇳🇱' },
+  { code: 'pl-PL', name: 'Polish', flag: '🇵🇱' },
+  { code: 'sv-SE', name: 'Swedish', flag: '🇸🇪' },
+  { code: 'da-DK', name: 'Danish', flag: '🇩🇰' },
+  { code: 'no-NO', name: 'Norwegian', flag: '🇳🇴' },
+  { code: 'fi-FI', name: 'Finnish', flag: '🇫🇮' },
+  { code: 'cs-CZ', name: 'Czech', flag: '🇨🇿' },
+  { code: 'hu-HU', name: 'Hungarian', flag: '🇭🇺' },
+  { code: 'ro-RO', name: 'Romanian', flag: '🇷🇴' },
+  { code: 'bg-BG', name: 'Bulgarian', flag: '🇧🇬' },
+  { code: 'hr-HR', name: 'Croatian', flag: '🇭🇷' },
+  { code: 'sk-SK', name: 'Slovak', flag: '🇸🇰' },
+  { code: 'sl-SI', name: 'Slovenian', flag: '🇸🇮' },
+  { code: 'et-EE', name: 'Estonian', flag: '🇪🇪' },
+  { code: 'lv-LV', name: 'Latvian', flag: '🇱🇻' },
+  { code: 'lt-LT', name: 'Lithuanian', flag: '🇱🇹' },
+  { code: 'el-GR', name: 'Greek', flag: '🇬🇷' },
+  { code: 'he-IL', name: 'Hebrew', flag: '🇮🇱' },
+  { code: 'th-TH', name: 'Thai', flag: '🇹🇭' },
+  { code: 'vi-VN', name: 'Vietnamese', flag: '🇻🇳' },
+  { code: 'id-ID', name: 'Indonesian', flag: '🇮🇩' },
+  { code: 'ms-MY', name: 'Malay', flag: '🇲🇾' },
+  { code: 'fil-PH', name: 'Filipino', flag: '🇵🇭' },
+  { code: 'uk-UA', name: 'Ukrainian', flag: '🇺🇦' },
+  { code: 'be-BY', name: 'Belarusian', flag: '🇧🇾' },
+  { code: 'ka-GE', name: 'Georgian', flag: '🇬🇪' },
+  { code: 'hy-AM', name: 'Armenian', flag: '🇦🇲' },
+  { code: 'az-AZ', name: 'Azerbaijani', flag: '🇦🇿' },
+  { code: 'kk-KZ', name: 'Kazakh', flag: '🇰🇿' },
+  { code: 'ky-KG', name: 'Kyrgyz', flag: '🇰🇬' },
+  { code: 'uz-UZ', name: 'Uzbek', flag: '🇺🇿' },
+  { code: 'mn-MN', name: 'Mongolian', flag: '🇲🇳' },
+  { code: 'ne-NP', name: 'Nepali', flag: '🇳🇵' },
+  { code: 'bn-BD', name: 'Bengali', flag: '🇧🇩' },
+  { code: 'si-LK', name: 'Sinhala', flag: '🇱🇰' },
+  { code: 'my-MM', name: 'Burmese', flag: '🇲🇲' },
+  { code: 'km-KH', name: 'Khmer', flag: '🇰🇭' },
+  { code: 'lo-LA', name: 'Lao', flag: '🇱🇦' },
+  { code: 'gl-ES', name: 'Galician', flag: '🇪🇸' },
+  { code: 'eu-ES', name: 'Basque', flag: '🇪🇸' },
+  { code: 'ca-ES', name: 'Catalan', flag: '🇪🇸' },
+  { code: 'cy-GB', name: 'Welsh', flag: '🇬🇧' },
+  { code: 'ga-IE', name: 'Irish', flag: '🇮🇪' },
+  { code: 'mt-MT', name: 'Maltese', flag: '🇲🇹' },
+  { code: 'is-IS', name: 'Icelandic', flag: '🇮🇸' },
+  { code: 'fo-FO', name: 'Faroese', flag: '🇫🇴' },
+  { code: 'sq-AL', name: 'Albanian', flag: '🇦🇱' },
+  { code: 'mk-MK', name: 'Macedonian', flag: '🇲🇰' },
+  { code: 'sr-RS', name: 'Serbian', flag: '🇷🇸' },
+  { code: 'bs-BA', name: 'Bosnian', flag: '🇧🇦' },
+  { code: 'me-ME', name: 'Montenegrin', flag: '🇲🇪' },
+  { code: 'af-ZA', name: 'Afrikaans', flag: '🇿🇦' },
+  { code: 'zu-ZA', name: 'Zulu', flag: '🇿🇦' },
+  { code: 'xh-ZA', name: 'Xhosa', flag: '🇿🇦' },
+  { code: 'sw-KE', name: 'Swahili', flag: '🇰🇪' },
+  { code: 'am-ET', name: 'Amharic', flag: '🇪🇹' },
+  { code: 'ha-NG', name: 'Hausa', flag: '🇳🇬' },
+  { code: 'yo-NG', name: 'Yoruba', flag: '🇳🇬' },
+  { code: 'ig-NG', name: 'Igbo', flag: '🇳🇬' },
+  { code: 'rw-RW', name: 'Kinyarwanda', flag: '🇷🇼' },
 ]
 
-interface VoiceInputButtonProps {
-  onTranscript: (text: string) => void
-  disabled?: boolean
-  className?: string
-}
+function VoiceControlsInner({ onVoiceInput }: VoiceControlsProps) {
+  const {
+    isListening,
+    setIsListening,
+    isSpeaking,
+    setIsSpeaking,
+    recognitionLanguage,
+    setRecognitionLanguage,
+    synthesisLanguage,
+    setSynthesisLanguage,
+    speechRate,
+    setSpeechRate,
+    speechPitch,
+    setSpeechPitch,
+    autoSpeak,
+    setAutoSpeak,
+    isSupported,
+    speakText,
+    stopSpeaking
+  } = useVoice()
 
-interface VoiceOutputButtonProps {
-  text: string
-  messageIndex?: number
-  disabled?: boolean
-  className?: string
-}
-
-export function VoiceInputButton({ onTranscript, disabled, className }: VoiceInputButtonProps) {
-  const [isListening, setIsListening] = useState(false)
-  const [selectedLanguage, setSelectedLanguage] = useState('en-US')
-  const [transcript, setTranscript] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [isSupported, setIsSupported] = useState(true)
   const recognitionRef = useRef<SpeechRecognition | null>(null)
+  const onVoiceInputRef = useRef(onVoiceInput)
 
-  useEffect(() => {
+  // Initialize speech recognition
+  const initSpeechRecognition = useCallback(() => {
+    if (!isSupported || typeof window === 'undefined') return
+
     try {
-      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        setIsSupported(false)
-        setError('Speech recognition not supported')
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+      if (!SpeechRecognition) {
+        console.warn('Speech recognition not supported')
         return
       }
 
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
       recognitionRef.current = new SpeechRecognition()
-      recognitionRef.current.continuous = true
-      recognitionRef.current.interimResults = true
-      recognitionRef.current.lang = selectedLanguage
+      
+      const recognition = recognitionRef.current
+      recognition.continuous = false
+      recognition.interimResults = true
+      recognition.lang = recognitionLanguage
 
-      recognitionRef.current.onstart = () => {
+      recognition.onstart = () => {
         setIsListening(true)
-        setError(null)
       }
 
-      recognitionRef.current.onresult = (event) => {
-        try {
-          let finalTranscript = ''
-          let interimTranscript = ''
+      recognition.onresult = (event) => {
+        let finalTranscript = ''
+        let interimTranscript = ''
 
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            const transcript = event.results[i][0].transcript
-            if (event.results[i].isFinal) {
-              finalTranscript += transcript
-            } else {
-              interimTranscript += transcript
-            }
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript
+          } else {
+            interimTranscript += transcript
           }
+        }
 
-          setTranscript(finalTranscript || interimTranscript)
-
-          if (finalTranscript) {
-            onTranscript(finalTranscript)
-            setTranscript('')
-          }
-        } catch (error) {
-          console.error('Error processing speech recognition result:', error)
-          setError('Error processing speech')
+        if (finalTranscript) {
+          onVoiceInputRef.current(finalTranscript)
+          recognition.stop()
         }
       }
 
-      recognitionRef.current.onerror = (event) => {
-        setIsListening(false)
+      recognition.onerror = (event) => {
         console.error('Speech recognition error:', event.error)
-        setError(`Error: ${event.error}`)
-      }
-
-      recognitionRef.current.onend = () => {
         setIsListening(false)
       }
 
-      return () => {
-        if (recognitionRef.current) {
-          try {
-            recognitionRef.current.stop()
-          } catch (error) {
-            console.error('Error stopping speech recognition:', error)
-          }
-        }
+      recognition.onend = () => {
+        setIsListening(false)
       }
     } catch (error) {
       console.error('Error initializing speech recognition:', error)
-      setIsSupported(false)
-      setError('Failed to initialize speech recognition')
     }
-  }, [selectedLanguage, onTranscript])
+  }, [isSupported, recognitionLanguage, setIsListening])
+
+  // Update ref when prop changes
+  useEffect(() => {
+    onVoiceInputRef.current = onVoiceInput
+  }, [onVoiceInput])
+
+  // Update recognition when language changes
+  useEffect(() => {
+    if (recognitionRef.current) {
+      recognitionRef.current.lang = recognitionLanguage
+    }
+  }, [recognitionLanguage])
+
+  // Initialize on mount - only after component is mounted
+  useEffect(() => {
+    // Small delay to ensure component is fully mounted
+    const timer = setTimeout(() => {
+      initSpeechRecognition()
+    }, 100)
+    
+    return () => clearTimeout(timer)
+  }, [initSpeechRecognition])
 
   const startListening = () => {
-    if (!recognitionRef.current || !isSupported) return
-    try {
-      recognitionRef.current.lang = selectedLanguage
-      recognitionRef.current.start()
-    } catch (error) {
-      setError('Failed to start speech recognition')
+    if (recognitionRef.current && !isListening && typeof window !== 'undefined') {
+      try {
+        recognitionRef.current.start()
+      } catch (error) {
+        console.error('Error starting speech recognition:', error)
+        setIsListening(false)
+      }
     }
   }
 
   const stopListening = () => {
-    if (recognitionRef.current) {
-      recognitionRef.current.stop()
+    if (recognitionRef.current && isListening && typeof window !== 'undefined') {
+      try {
+        recognitionRef.current.stop()
+      } catch (error) {
+        console.error('Error stopping speech recognition:', error)
+        setIsListening(false)
+      }
     }
+  }
+
+  const handleSpeakTest = () => {
+    speakText("Hello! I'm ready to help you.")
   }
 
   if (!isSupported) {
     return (
-      <Button variant="outline" size="icon" className={cn("h-8 w-8", className)} disabled>
-        <AlertCircle size={16} />
-      </Button>
+      <div className="text-xs text-muted-foreground">
+        Voice features not supported in this browser
+      </div>
     )
   }
 
   return (
-    <div className="flex items-center gap-1 sm:gap-2">
-      <select
-        value={selectedLanguage}
-        onChange={(e) => setSelectedLanguage(e.target.value)}
-        className="text-xs border rounded px-1 sm:px-2 py-1 bg-background hidden sm:block"
+    <div className="flex items-center gap-2">
+      {/* Voice Input Button */}
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={isListening ? stopListening : startListening}
+        disabled={isSpeaking}
+        className={cn(
+          "h-8 w-8 lg:h-9 lg:w-9 transition-all duration-200",
+          isListening 
+            ? "bg-red-500 text-white hover:bg-red-600 animate-pulse" 
+            : "hover:bg-muted/50"
+        )}
       >
-        {LANGUAGES.map(lang => (
-          <option key={lang.code} value={lang.code}>
-            {lang.flag} {lang.name}
-          </option>
-        ))}
-      </select>
-      
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant={isListening ? "destructive" : "outline"}
-              size="icon"
-              className={cn(
-                "h-8 w-8 transition-all duration-200",
-                isListening && "animate-pulse shadow-lg shadow-red-500/50",
-                className
-              )}
-              onClick={isListening ? stopListening : startListening}
-              disabled={disabled}
-            >
-              {isListening ? <MicOff size={16} /> : <Mic size={16} />}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{isListening ? 'Stop listening' : 'Start voice input'}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+        {isListening ? <MicOff size={16} /> : <Mic size={16} />}
+      </Button>
 
-      {transcript && (
-        <Badge variant="secondary" className="text-xs hidden sm:block">
-          {transcript}
-        </Badge>
-      )}
+      {/* Voice Output Button */}
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={isSpeaking ? stopSpeaking : handleSpeakTest}
+        disabled={isListening}
+        className={cn(
+          "h-8 w-8 lg:h-9 lg:w-9 transition-all duration-200",
+          isSpeaking 
+            ? "bg-blue-500 text-white hover:bg-blue-600" 
+            : "hover:bg-muted/50"
+        )}
+      >
+        {isSpeaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
+      </Button>
 
-      {error && (
-        <div className="text-xs text-red-500 hidden sm:block">
-          {error}
-        </div>
-      )}
+      {/* Voice Settings */}
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-8 w-8 lg:h-9 lg:w-9 hover:bg-muted/50"
+          >
+            <Settings size={16} />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-80 p-4" align="end">
+          <div className="space-y-4">
+            <h3 className="font-semibold text-sm">Voice Settings</h3>
+            
+            {/* Recognition Language */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium">Speech Recognition Language</Label>
+              <Select value={recognitionLanguage} onValueChange={setRecognitionLanguage}>
+                <SelectTrigger className="h-8 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {LANGUAGES.map((lang) => (
+                    <SelectItem key={lang.code} value={lang.code} className="text-xs">
+                      <span className="flex items-center gap-2">
+                        <span>{lang.flag}</span>
+                        <span>{lang.name}</span>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Synthesis Language */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium">Text-to-Speech Language</Label>
+              <Select value={synthesisLanguage} onValueChange={setSynthesisLanguage}>
+                <SelectTrigger className="h-8 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {LANGUAGES.map((lang) => (
+                    <SelectItem key={lang.code} value={lang.code} className="text-xs">
+                      <span className="flex items-center gap-2">
+                        <span>{lang.flag}</span>
+                        <span>{lang.name}</span>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Speech Rate */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium">Speech Rate: {speechRate}x</Label>
+              <Slider
+                value={[speechRate]}
+                onValueChange={(value) => setSpeechRate(value[0])}
+                min={0.5}
+                max={2}
+                step={0.1}
+                className="w-full"
+              />
+            </div>
+
+            {/* Speech Pitch */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium">Speech Pitch: {speechPitch}x</Label>
+              <Slider
+                value={[speechPitch]}
+                onValueChange={(value) => setSpeechPitch(value[0])}
+                min={0.5}
+                max={2}
+                step={0.1}
+                className="w-full"
+              />
+            </div>
+
+            {/* Auto Speak */}
+            <div className="flex items-center justify-between">
+              <Label className="text-xs font-medium">Auto-speak responses</Label>
+              <Switch
+                checked={autoSpeak}
+                onCheckedChange={setAutoSpeak}
+              />
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
   )
 }
 
-export function VoiceOutputButton({ text, messageIndex, disabled, className }: VoiceOutputButtonProps) {
-  const [isSpeaking, setIsSpeaking] = useState(false)
-  const synthesisRef = useRef<SpeechSynthesisUtterance | null>(null)
-
-  const speakText = useCallback(() => {
-    if (!('speechSynthesis' in window) || disabled) return
-
-    try {
-      synthesisRef.current = new SpeechSynthesisUtterance(text)
-      synthesisRef.current.onstart = () => setIsSpeaking(true)
-      synthesisRef.current.onend = () => setIsSpeaking(false)
-      synthesisRef.current.onerror = (event) => {
-        console.error('Speech synthesis error:', event)
-        setIsSpeaking(false)
-      }
-      speechSynthesis.speak(synthesisRef.current)
-    } catch (error) {
-      console.error('Speech synthesis error:', error)
-      setIsSpeaking(false)
-    }
-  }, [text, disabled])
-
-  const stopSpeaking = useCallback(() => {
-    speechSynthesis.cancel()
-    setIsSpeaking(false)
-  }, [])
-
-  return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant={isSpeaking ? "destructive" : "ghost"}
-            size="icon"
-            className={cn(
-              "h-8 w-8 rounded-full transition-all duration-200",
-              isSpeaking && "animate-pulse shadow-lg shadow-red-500/50",
-              className
-            )}
-            onClick={isSpeaking ? stopSpeaking : speakText}
-            disabled={disabled}
-          >
-            {isSpeaking ? <VolumeX size={14} /> : <Volume2 size={14} />}
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>{isSpeaking ? 'Stop speaking' : 'Speak message'}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  )
-}
+export function VoiceControls(props: VoiceControlsProps) {
+  return <VoiceControlsClient {...props} />
+} 

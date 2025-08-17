@@ -6,46 +6,29 @@
   :root {
     /* Light Mode Colors */
     --background: 0 0% 100%;
-    --foreground: 224 15% 15%;
+    --foreground: 220 15% 20%;
     --card: 0 0% 100%;
-    --card-foreground: 224 15% 15%;
+    --card-foreground: 220 15% 25%;
     --popover: 0 0% 100%;
-    --popover-foreground: 224 15% 15%;
+    --popover-foreground: 220 15% 15%;
 
-    --primary: 210 100% 50%;
+    --primary: 220 100% 56%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 15% 96%;
-    --secondary-foreground: 220 15% 15%;
-    --muted: 220 15% 96%;
-    --muted-foreground: 220 15% 40%;
-    --accent: 210 100% 96%;
-    --accent-foreground: 210 100% 25%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 220 15% 25%;
+    --muted: 210 40% 95%;
+    --muted-foreground: 220 15% 50%;
+    --accent: 220 100% 97%;
+    --accent-foreground: 220 100% 45%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 80% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 210 100% 50%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 100% 66%;
 
     --radius: 0.75rem;
-
-    /* Spacing System */
-    --spacing-xxs: 0.25rem; /* 4px */
-    --spacing-xs: 0.5rem; /* 8px */
-    --spacing-sm: 0.75rem; /* 12px */
-    --spacing-md: 1rem; /* 16px */
-    --spacing-lg: 1.5rem; /* 24px */
-    --spacing-xl: 2rem; /* 32px */
-    --spacing-xxl: 3rem; /* 48px */
-    --spacing-3xl: 4rem; /* 64px */
-
-    /* Layout Spacing */
-    --layout-padding-xs: 0.5rem;
-    --layout-padding-sm: 1rem;
-    --layout-padding-md: 1.5rem;
-    --layout-padding-lg: 2rem;
-    --layout-padding-xl: 3rem;
 
     /* Chart Colors (Brightened) */
     --chart-1: 210 90% 60%;
@@ -95,164 +78,77 @@
     --accent-blue-border: 210 100% 40%;
   }
 
-  /* Spacing System for Dark Mode */
-  .dark {
-    --spacing-xxs: 0.25rem; /* 4px */
-    --spacing-xs: 0.5rem; /* 8px */
-    --spacing-sm: 0.75rem; /* 12px */
-    --spacing-md: 1rem; /* 16px */
-    --spacing-lg: 1.5rem; /* 24px */
-    --spacing-xl: 2rem; /* 32px */
-    --spacing-xxl: 3rem; /* 48px */
-    --spacing-3xl: 4rem; /* 64px */
-
-    --layout-padding-xs: 0.5rem;
-    --layout-padding-sm: 1rem;
-    --layout-padding-md: 1.5rem;
-    --layout-padding-lg: 2rem;
-    --layout-padding-xl: 3rem;
+  * {
+    @apply border-border;
   }
 
   body {
     font-family: 'Inter', sans-serif;
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Layout Classes */
-  .container-padding {
-    padding: var(--layout-padding-md);
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
   }
 
-  .container-padding-sm {
-    padding: var(--layout-padding-sm);
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
   }
 
-  .container-padding-lg {
-    padding: var(--layout-padding-lg);
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full;
   }
 
-  .section-spacing {
-    margin: var(--spacing-lg) 0;
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/30;
   }
 
-  .section-spacing-sm {
-    margin: var(--spacing-md) 0;
-  }
-
-  .section-spacing-lg {
-    margin: var(--spacing-xl) 0;
-  }
-
-  /* Animation Classes */
-  .animate-fade-in-up {
-    animation: fadeInUp 0.5s ease-out;
-  }
-
-  .animate-fade-in-down {
-    animation: fadeInDown 0.5s ease-out;
-  }
-
-  .animate-slide-in-left {
-    animation: slideInLeft 0.3s ease-out;
-  }
-
-  .animate-slide-in-right {
-    animation: slideInRight 0.3s ease-out;
-  }
-
-  /* Keyframes */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    html {
+      font-size: 14px;
     }
   }
 
-  @keyframes fadeInDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  /* Focus styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 
-  @keyframes slideInLeft {
-    from {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+  /* Selection styles */
+  ::selection {
+    @apply bg-primary/20 text-foreground;
   }
 
-  @keyframes slideInRight {
-    from {
-      opacity: 0;
-      transform: translateX(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+  /* Smooth transitions */
+  * {
+    transition-property: color, background-color, border-color,
+      text-decoration-color, fill, stroke, opacity, box-shadow, transform,
+      filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+}
+
+@layer components {
+  /* Custom component styles */
+  .glass-effect {
+    @apply bg-background/80 backdrop-blur-sm border border-border/50;
   }
 
-  /* Utility Classes */
-  .text-balance {
-    text-wrap: balance;
+  .gradient-text {
+    @apply bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent;
   }
 
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  .hover-lift {
+    @apply transition-all duration-200 hover:scale-105 hover:shadow-lg;
   }
 
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Focus Styles */
-  .focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
-  }
-
-  /* Interactive Elements */
-  .interactive {
-    @apply transition-all duration-200 ease-in-out;
-  }
-
-  .interactive:hover {
-    @apply transform scale-105;
-  }
-
-  /* Card Styles */
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
-  }
-
-  /* Button Styles */
-  .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 focus-ring;
-  }
-
-  .btn-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-ring;
-  }
-
-  /* Form Styles */
-  .form-input {
-    @apply border border-input bg-background text-foreground focus-ring;
-  }
-
-  .form-label {
-    @apply text-sm font-medium text-foreground;
+  .mobile-optimized {
+    @apply sm:text-sm lg:text-base;
   }
 }

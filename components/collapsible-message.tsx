@@ -1,107 +1,109 @@
-import { IconLogo } from '@/components/ui/icons'
+'use client'
+
 import { cn } from '@/lib/utils'
-import { UserCircle2 } from 'lucide-react'
-import React, { useState } from 'react'
+import { Message } from 'ai'
+import { Check, ChevronDown, ChevronUp, Copy } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { Button } from './ui/button'
+import { Card, CardContent } from './ui/card'
 
 interface CollapsibleMessageProps {
-  role: 'user' | 'assistant'
-  content: React.ReactNode
-  header?: React.ReactNode
-  isCollapsible?: boolean
-  showIcon?: boolean
-  showBorder?: boolean
-  messageIndex?: number
-  timestamp?: string
-  className?: string
+  message: Message
+  isLast?: boolean
 }
 
-export const CollapsibleMessage: React.FC<CollapsibleMessageProps> = ({
-  role,
-  content,
-  header,
-  isCollapsible = false,
-  showIcon = true,
-  showBorder = false,
-  messageIndex = 0,
-  timestamp,
-  className
-}) => {
-  const [isOpen, setIsOpen] = useState(!isCollapsible)
+export function CollapsibleMessage({
+  message,
+  isLast
+}: CollapsibleMessageProps) {
+  const [isExpanded, setIsExpanded] = useState(true)
+  const [copied, setCopied] = useState(false)
+  const isUser = message.role === 'user'
 
-  const onOpenChange = (open: boolean) => {
-    setIsOpen(open)
+  const handleCopy = async () => {
+    const content =
+      typeof message.content === 'string'
+        ? message.content
+        : JSON.stringify(message.content)
+
+    await navigator.clipboard.writeText(content)
+    setCopied(true)
+    toast.success('Message copied to clipboard')
+    setTimeout(() => setCopied(false), 2000)
   }
 
+  const content =
+    typeof message.content === 'string'
+      ? message.content
+      : JSON.stringify(message.content, null, 2)
+
   return (
-    <div
+    <Card
       className={cn(
-        'flex items-start gap-3 w-full',
-        role === 'user' ? 'justify-end' : 'justify-start',
-        className
+        'transition-all duration-200 hover:shadow-md',
+        isUser
+          ? 'bg-primary text-primary-foreground'
+          : 'bg-card border-border/50'
       )}
-      style={{ animationDelay: `${Math.min(0.2, (messageIndex % 3) * 0.05)}s` }}
     >
-      {/* Avatar area for assistant messages */}
-      {role === 'assistant' && showIcon && (
-        <div className="flex flex-col items-center mt-1">
-          <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white/90 dark:bg-card/90 shadow-sm border border-border/50">
-            <IconLogo className="size-5" />
-          </div>
-        </div>
-      )}
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-xs font-medium opacity-70">
+                {isUser ? 'You' : 'Sybot AI'}
+              </span>
+              {!isUser && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="h-6 w-6 p-0"
+                >
+                  {isExpanded ? (
+                    <ChevronUp size={12} />
+                  ) : (
+                    <ChevronDown size={12} />
+                  )}
+                </Button>
+              )}
+            </div>
 
-      {/* Message content area */}
-      <div
-        className={cn(
-          'relative flex flex-col max-w-[85%] md:max-w-[80%] rounded-3xl px-5 py-4 my-1 transition-all duration-200 shadow-sm',
-          role === 'assistant'
-            ? 'bg-white/80 dark:bg-card/90 border border-border/50'
-            : 'bg-primary/10 dark:bg-primary/20 border border-primary/20',
-          role === 'assistant' ? 'rounded-br-2xl' : 'rounded-bl-2xl'
-        )}
-        tabIndex={0}
-        aria-label={role === 'user' ? 'User message' : 'Assistant message'}
-      >
-        {header && <div className="mb-1">{header}</div>}
-        <div className="py-2 flex-1">{content}</div>
-
-        {/* Enhanced metadata area */}
-        <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/30 text-xs">
-          <span className="text-muted-foreground/70">{timestamp}</span>
-          <div className="flex space-x-1">
-            <button
-              className="rounded-full p-1 hover:bg-muted transition-colors"
-              aria-label="Like message"
-            >
-              👍
-            </button>
-            <button
-              className="rounded-full p-1 hover:bg-muted transition-colors"
-              aria-label="Dislike message"
-            >
-              👎
-            </button>
-            <button
-              className="rounded-full p-1 hover:bg-muted transition-colors"
-              aria-label="Copy message"
-            >
-              📋
-            </button>
+            {isExpanded ? (
+              <div className="prose prose-sm max-w-none">
+                <div
+                  className={cn(
+                    'whitespace-pre-wrap break-words',
+                    isUser ? 'text-primary-foreground' : 'text-foreground'
+                  )}
+                >
+                  {content}
+                </div>
+              </div>
+            ) : (
+              <div className="text-sm text-muted-foreground">
+                Click to expand message
+              </div>
+            )}
           </div>
-        </div>
-      </div>
 
-      {/* Avatar area for user messages */}
-      {role === 'user' && showIcon && (
-        <div className="flex flex-col items-center mt-1">
-          <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 shadow-sm border border-primary/20">
-            <UserCircle2
-              size={20}
-              className="text-primary/70 dark:text-primary/80"
-            />
-          </div>
+          {!isUser && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCopy}
+              className="h-8 w-8 p-0 flex-shrink-0"
+            >
+              {copied ? (
+                <Check size={14} className="text-green-500" />
+              ) : (
+                <Copy size={14} />
+              )}
+            </Button>
+          )}
         </div>
-      )}
-    </div>
+      </CardContent>
+    </Card>
   )
 }
