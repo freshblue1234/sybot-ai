@@ -28,19 +28,19 @@ export function VideoSearchSection({
   return (
     <CollapsibleMessage
       role="assistant"
-      isCollapsible={true}
+      content={
+        !isLoading && searchResults ? (
+          <Section title="Videos">
+            <VideoSearchResults results={searchResults} />
+          </Section>
+        ) : (
+          <DefaultSkeleton />
+        )
+      }
       header={header}
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
+      isCollapsible={true}
       showIcon={false}
-    >
-      {!isLoading && searchResults ? (
-        <Section title="Videos">
-          <VideoSearchResults results={searchResults} />
-        </Section>
-      ) : (
-        <DefaultSkeleton />
-      )}
-    </CollapsibleMessage>
+      className="my-6"
+    />
   )
 }

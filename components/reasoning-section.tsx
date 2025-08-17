@@ -56,17 +56,17 @@ export function ReasoningSection({
     <div className="flex flex-col gap-4">
       <CollapsibleMessage
         role="assistant"
-        isCollapsible={true}
+        content={
+          <BotMessage
+            message={content.reasoning}
+            className="prose-p:text-muted-foreground"
+          />
+        }
         header={reasoningHeader}
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
+        isCollapsible={true}
         showBorder={true}
-      >
-        <BotMessage
-          message={content.reasoning}
-          className="prose-p:text-muted-foreground"
-        />
-      </CollapsibleMessage>
+        className="my-6"
+      />
     </div>
   )
 }

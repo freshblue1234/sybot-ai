@@ -109,7 +109,7 @@ export function ChatMessages({
 
   return (
     <div className="relative mx-auto px-4 w-full">
-      {messages.map(message => (
+      {messages.map((message, index) => (
         <div key={message.id} className="mb-4 flex flex-col gap-4">
           <RenderMessage
             message={message}
@@ -119,6 +119,7 @@ export function ChatMessages({
             onQuerySelect={onQuerySelect}
             chatId={chatId}
             addToolResult={addToolResult}
+            messageIndex={index}
           />
         </div>
       ))}
@@ -134,7 +135,7 @@ export function ChatMessages({
         ) : (
           <Spinner />
         ))}
-      <div ref={messagesEndRef} /> {/* Add empty div as scroll anchor */}
+      <div ref={messagesEndRef} />
     </div>
   )
 }

@@ -43,29 +43,31 @@ export function SearchSection({
   return (
     <CollapsibleMessage
       role="assistant"
-      isCollapsible={true}
+      content={
+        <>
+          {searchResults &&
+            searchResults.images &&
+            searchResults.images.length > 0 && (
+              <Section>
+                <SearchResultsImageSection
+                  images={searchResults.images}
+                  query={query}
+                />
+              </Section>
+            )}
+          {isLoading && isToolLoading ? (
+            <SearchSkeleton />
+          ) : searchResults?.results ? (
+            <Section title="Sources">
+              <SearchResults results={searchResults.results} />
+            </Section>
+          ) : null}
+        </>
+      }
       header={header}
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
+      isCollapsible={true}
       showIcon={false}
-    >
-      {searchResults &&
-        searchResults.images &&
-        searchResults.images.length > 0 && (
-          <Section>
-            <SearchResultsImageSection
-              images={searchResults.images}
-              query={query}
-            />
-          </Section>
-        )}
-      {isLoading && isToolLoading ? (
-        <SearchSkeleton />
-      ) : searchResults?.results ? (
-        <Section title="Sources">
-          <SearchResults results={searchResults.results} />
-        </Section>
-      ) : null}
-    </CollapsibleMessage>
+      className="my-6"
+    />
   )
 }

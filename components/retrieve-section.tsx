@@ -28,20 +28,20 @@ export function RetrieveSection({
   return (
     <CollapsibleMessage
       role="assistant"
-      isCollapsible={true}
+      content={
+        !isLoading && data ? (
+          <Section title="Sources">
+            <SearchResults results={data.results} />
+          </Section>
+        ) : (
+          <DefaultSkeleton />
+        )
+      }
       header={header}
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
+      isCollapsible={true}
       showIcon={false}
-    >
-      {!isLoading && data ? (
-        <Section title="Sources">
-          <SearchResults results={data.results} />
-        </Section>
-      ) : (
-        <DefaultSkeleton />
-      )}
-    </CollapsibleMessage>
+      className="my-6"
+    />
   )
 }
 

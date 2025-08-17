@@ -11,6 +11,7 @@ export type AnswerSectionProps = {
   onOpenChange: (open: boolean) => void
   chatId?: string
   showActions?: boolean
+  messageIndex?: number
 }
 
 export function AnswerSection({
@@ -18,7 +19,8 @@ export function AnswerSection({
   isOpen,
   onOpenChange,
   chatId,
-  showActions = true // Default to true for backward compatibility
+  showActions = true, // Default to true for backward compatibility
+  messageIndex = 0
 }: AnswerSectionProps) {
   const enableShare = process.env.NEXT_PUBLIC_ENABLE_SHARE === 'true'
 
@@ -30,6 +32,7 @@ export function AnswerSection({
           message={content}
           chatId={chatId}
           enableShare={enableShare}
+          messageIndex={messageIndex}
         />
       )}
     </div>
@@ -39,13 +42,11 @@ export function AnswerSection({
   return (
     <CollapsibleMessage
       role="assistant"
+      content={message}
       isCollapsible={false}
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
       showBorder={false}
       showIcon={false}
-    >
-      {message}
-    </CollapsibleMessage>
+      messageIndex={messageIndex}
+    />
   )
 }
