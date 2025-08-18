@@ -7,21 +7,21 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle
 } from './ui/alert-dialog'
 import { Button } from './ui/button'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
 } from './ui/dropdown-menu'
 
 type HistoryItemProps = {
@@ -158,7 +158,6 @@ const HistoryItem: React.FC<HistoryItemProps> = ({ chat, onDelete }) => {
             <AlertDialogTitle>Delete Chat</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete &quot;{chat.title}&quot;? This
-              action cannot Are you sure you want to delete "{chat.title}"? This
               action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>

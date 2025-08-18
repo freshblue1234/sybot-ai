@@ -17,6 +17,7 @@ export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: any[]
   savedMessages?: any[]
   models?: any[]
+  initialQuery?: string
 }
 
 export function Chat({
@@ -24,6 +25,7 @@ export function Chat({
   initialMessages,
   savedMessages,
   models,
+  initialQuery,
   ...props
 }: ChatProps) {
   const router = useRouter()
@@ -65,16 +67,17 @@ export function Chat({
     }
   })
 
-  // Handle initial message from URL
+  // Handle initial message from URL or props
   useEffect(() => {
-    if (initialMessage && messages.length === 0) {
+    const messageToSend = initialQuery || initialMessage
+    if (messageToSend && messages.length === 0) {
       // Add the initial message to the chat
       append({
         role: 'user',
-        content: initialMessage
+        content: messageToSend
       })
     }
-  }, [initialMessage, messages.length, append])
+  }, [initialQuery, initialMessage, messages.length, append])
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 

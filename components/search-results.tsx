@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { SearchResultItem } from '@/lib/types'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -38,11 +39,13 @@ export function SearchResults({ results }: SearchResultsProps) {
                 </p>
                 <div className="mt-2 flex items-center space-x-1">
                   {/* Show favicon image only, no fallback */}
-                  <img
+                  <Image
                     src={`https://www.google.com/s2/favicons?domain=${
                       new URL(result.url).hostname
                     }`}
                     alt="favicon"
+                    width={16}
+                    height={16}
                     className="h-4 w-4"
                     onError={e => {
                       e.currentTarget.style.display = 'none'

@@ -52,7 +52,10 @@ export async function getChats(userId?: string | null) {
 
     return results
       .filter((result): result is Record<string, any> => {
-        if (result === null || Object.keys(result).length === 0) {
+        if (result === null || result === undefined) {
+          return false
+        }
+        if (Object.keys(result).length === 0) {
           return false
         }
         return true
@@ -130,16 +133,13 @@ export async function deleteChat(
 
     // Check if the chat exists and belongs to the user
     const chat = await redis.hgetall(chatKey)
-    if (!chat || chat.userId !== userId) {
+    if (!chat || (chat as any).userId !== userId) {
       return { error: 'Chat not found or access denied' }
     }
 
     // Delete the chat and remove it from the user's chat list
-    const pipeline = redis.pipeline()
-    pipeline.del(chatKey)
-    pipeline.zrem(userChatKey, chatKey)
-
-    await pipeline.exec()
+    await redis.del(chatKey)
+    await redis.zrem(userChatKey, chatKey)
 
     revalidatePath('/')
     return {}
@@ -167,14 +167,10 @@ export async function clearChats(
     if (!chats.length) {
       return { error: 'No chats to clear' }
     }
-    const pipeline = redis.pipeline()
-
     for (const chat of chats) {
-      pipeline.del(chat)
-      pipeline.zrem(userChatKey, chat)
+      await redis.del(chat)
+      await redis.zrem(userChatKey, chat)
     }
-
-    await pipeline.exec()
 
     revalidatePath('/')
     redirect('/')
@@ -194,19 +190,15 @@ export async function saveChat(chat: Chat, userId: string = 'anonymous') {
       return []
     }
 
-    const pipeline = redis.pipeline()
-
     const chatToSave = {
       ...chat,
       messages: JSON.stringify(chat.messages)
     }
 
-    pipeline.hmset(`chat:${chat.id}`, chatToSave)
-    pipeline.zadd(getUserChatKey(userId), Date.now(), `chat:${chat.id}`)
+    await redis.hmset(`chat:${chat.id}`, chatToSave)
+    await redis.zadd(getUserChatKey(userId), Date.now(), `chat:${chat.id}`)
 
-    const results = await pipeline.exec()
-
-    return results
+    return []
   } catch (error) {
     console.error('Error saving chat:', error)
     throw error

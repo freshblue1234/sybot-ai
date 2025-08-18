@@ -15,5 +15,5 @@ export default async function SearchPage(props: {
 
   const id = generateId()
   const models = await getModels()
-  return <Chat id={id} query={q} models={models} />
+  return <Chat id={id} initialQuery={q} models={models} />
 }

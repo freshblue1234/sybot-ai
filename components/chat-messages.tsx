@@ -71,7 +71,7 @@ export function ChatMessages({
     let currentGroup: (typeof groups)[0] = { messages: [] }
 
     for (const message of messages) {
-      if (message.role === 'tool') {
+      if ((message as any).role === 'tool') {
         // Add tool message to current group
         currentGroup.messages.push(message)
       } else if (
@@ -114,9 +114,14 @@ export function ChatMessages({
             />
           ))}
 
-          {group.toolCalls && (
-            <ToolSection toolCalls={group.toolCalls} data={data} />
-          )}
+          {group.toolCalls && group.toolCalls.map((tool, toolIndex) => (
+            <ToolSection
+              key={toolIndex}
+              tool={tool}
+              isOpen={true}
+              onOpenChange={() => {}}
+            />
+          ))}
         </div>
       ))}
 

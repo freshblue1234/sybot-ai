@@ -26,12 +26,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-<<<<<<< HEAD
 .env*.local
 .env
-=======
 *.local
->>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
 
 # vercel
 .vercel
@@ -40,7 +37,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-<<<<<<< HEAD
 # IDE
 .vscode/
 .idea/
@@ -133,8 +129,6 @@ temp/
 
 # Turbo
 .turbo
-=======
+
 # cursor
 .cursor
->>>>>>> 41155a42ae5ee50065317213a1704586c96f7cfd
-node_modules

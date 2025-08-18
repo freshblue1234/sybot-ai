@@ -1,9 +1,9 @@
 import {
-  convertToCoreMessages,
-  createDataStreamResponse,
-  DataStreamWriter,
-  JSONValue,
-  streamText
+    convertToCoreMessages,
+    createDataStreamResponse,
+    DataStreamWriter,
+    JSONValue,
+    streamText
 } from 'ai'
 import { manualResearcher } from '../agents/manual-researcher'
 import { ExtendedCoreMessage } from '../types'
@@ -134,14 +134,14 @@ export function createManualToolStreamResponse(config: BaseStreamConfig) {
           const words = demoResponse.split(' ')
           for (let i = 0; i < words.length; i++) {
             await new Promise(resolve => setTimeout(resolve, 50)) // 50ms delay between words
-            dataStream.write({
+            dataStream.writeData({
               type: 'text-delta',
               textDelta: words[i] + (i < words.length - 1 ? ' ' : '')
             })
           }
 
           // Add assistant message to the stream
-          dataStream.write({
+          dataStream.writeData({
             type: 'message',
             message: {
               id: `demo-${Date.now()}`,
@@ -150,7 +150,7 @@ export function createManualToolStreamResponse(config: BaseStreamConfig) {
             }
           })
 
-          dataStream.write({ type: 'done' })
+          dataStream.writeData({ type: 'done' })
           return
         }
 
@@ -246,12 +246,12 @@ export function createManualToolStreamResponse(config: BaseStreamConfig) {
 
 Error details: ${error instanceof Error ? error.message : String(error)}`
 
-        dataStream.write({
+        dataStream.writeData({
           type: 'text-delta',
           textDelta: errorMessage
         })
 
-        dataStream.write({ type: 'done' })
+        dataStream.writeData({ type: 'done' })
       }
     },
     onError: error => {
