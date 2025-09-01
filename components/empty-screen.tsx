@@ -1,5 +1,3 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
 import { Bot, Globe, Lightbulb, Search, Sparkles, Zap } from 'lucide-react'
 
 const exampleMessages = [
@@ -49,62 +47,32 @@ const exampleMessages = [
 
 export function EmptyScreen() {
   return (
-    <div className="mx-auto max-w-2xl px-4">
-      <div className="rounded-lg border bg-background p-8">
-        <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-            <Bot className="w-8 h-8 text-primary" />
+    <div className="flex items-center justify-center h-full">
+      <div className="text-center text-gray-400 max-w-md mx-auto px-6">
+        <div className="mb-6">
+          <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-8 h-8 bg-blue-500 rounded-full animate-pulse"></div>
           </div>
-          <h1 className="mb-2 text-lg font-semibold">Welcome to Sybot AI</h1>
-          <p className="mb-4 text-sm text-muted-foreground">
-            Your intelligent AI assistant is ready to help. Ask me anything!
-          </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          {exampleMessages.map((example, index) => (
-            <Card
-              key={index}
-              className="group cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-[1.02]"
-            >
-              <CardContent className="p-4">
-                <div className="flex items-start gap-3">
-                  <div
-                    className={cn(
-                      'w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0',
-                      example.bgColor
-                    )}
-                  >
-                    <example.icon
-                      className={cn('w-5 h-5', example.iconColor)}
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-medium mb-1 group-hover:text-primary transition-colors">
-                      {example.heading}
-                    </h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      {example.message}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <div className="text-center">
-          <p className="text-xs text-muted-foreground mb-4">
-            💡 <strong>Pro tip:</strong> Try asking follow-up questions to dive
-            deeper into any topic
-          </p>
-          <div className="flex flex-wrap justify-center gap-2 text-xs text-muted-foreground">
-            <span className="px-2 py-1 bg-muted rounded-full">Web Search</span>
-            <span className="px-2 py-1 bg-muted rounded-full">Voice Input</span>
-            <span className="px-2 py-1 bg-muted rounded-full">
-              Multi-language
-            </span>
-            <span className="px-2 py-1 bg-muted rounded-full">Real-time</span>
+        <h2 className="text-2xl font-bold text-white mb-3">Hello! I&apos;m Sybot 👋</h2>
+        <p className="text-lg text-gray-300 mb-4">
+          Your intelligent AI companion, ready to chat, help, and explore with you.
+        </p>
+        <p className="text-base text-gray-400">
+          Just type your message below or click the microphone to speak naturally!
+        </p>
+        
+        {/* Quick Start Suggestions */}
+        <div className="mt-8 grid grid-cols-1 gap-3">
+          <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
+            <p className="text-sm text-gray-300">
+              💡 <span className="font-medium">Try asking:</span> &ldquo;What can you help me with today?&rdquo;
+            </p>
+          </div>
+          <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
+            <p className="text-sm text-gray-300">
+              🎯 <span className="font-medium">Or say:</span> &ldquo;Tell me something interesting!&rdquo;
+            </p>
           </div>
         </div>
       </div>

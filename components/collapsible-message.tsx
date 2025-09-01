@@ -1,159 +1,176 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import { Message } from 'ai'
 import { Check, ChevronDown, ChevronUp, Copy } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import rehypeExternalLinks from 'rehype-external-links'
+import rehypeKatex from 'rehype-katex'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 import { toast } from 'sonner'
-import { Button } from './ui/button'
-import { Card, CardContent } from './ui/card'
 
 interface CollapsibleMessageProps {
-  message?: Message
-  isLast?: boolean
-  role?: string
+  message: Message
   isCollapsible?: boolean
-  header?: React.ReactNode
-  isOpen?: boolean
-  onOpenChange?: (open: boolean) => void
-  showBorder?: boolean
-  showIcon?: boolean
-  children?: React.ReactNode
 }
 
-export function CollapsibleMessage({
-  message,
-  isLast,
-  role,
-  isCollapsible = false,
-  header,
-  isOpen,
-  onOpenChange,
-  showBorder = true,
-  showIcon = true,
-  children
-}: CollapsibleMessageProps) {
-  const [isExpanded, setIsExpanded] = useState(isOpen ?? true)
+export function CollapsibleMessage({ message, isCollapsible = false }: CollapsibleMessageProps) {
+  const [isExpanded, setIsExpanded] = useState(!isCollapsible)
   const [copied, setCopied] = useState(false)
-  
-  // Handle both message-based and children-based usage
-  const isUser = message ? message.role === 'user' : role === 'user'
-  
-  // Update internal state when external state changes
-  useEffect(() => {
-    if (isOpen !== undefined) {
-      setIsExpanded(isOpen)
-    }
-  }, [isOpen])
 
   const handleCopy = async () => {
-    let content = ''
-    if (message) {
-      content =
-        typeof message.content === 'string'
-          ? message.content
-          : JSON.stringify(message.content)
-    } else if (children) {
-      // For children-based usage, try to extract text content
-      const textContent = typeof children === 'string' ? children : ''
-      content = textContent
+    try {
+      await navigator.clipboard.writeText(message.content)
+      setCopied(true)
+      toast.success('Message copied to clipboard')
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      toast.error('Failed to copy message')
     }
-
-    await navigator.clipboard.writeText(content)
-    setCopied(true)
-    toast.success('Message copied to clipboard')
-    setTimeout(() => setCopied(false), 2000)
   }
 
-  const content = message
-    ? typeof message.content === 'string'
-      ? message.content
-      : JSON.stringify(message.content, null, 2)
-    : null
+  const content = message.content
+  const shouldTruncate = isCollapsible && !isExpanded && content.length > 500
+  const displayContent = shouldTruncate ? content.slice(0, 500) + '...' : content
 
   return (
-    <Card
-      className={cn(
-        'transition-all duration-200 hover:shadow-md',
-        showBorder && 'border-border/50',
-        isUser
-          ? 'bg-primary text-primary-foreground'
-          : 'bg-card'
-      )}
-    >
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            {/* Header section */}
-            {(header || showIcon) && (
-              <div className="flex items-center gap-2 mb-2">
-                {header ? (
-                  header
-                ) : (
-                  <span className="text-xs font-medium opacity-70">
-                    {isUser ? 'You' : 'Sybot AI'}
-                  </span>
-                )}
-                {isCollapsible && !isUser && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      const newState = !isExpanded
-                      setIsExpanded(newState)
-                      onOpenChange?.(newState)
-                    }}
-                    className="h-6 w-6 p-0"
-                  >
-                    {isExpanded ? (
-                      <ChevronUp size={12} />
-                    ) : (
-                      <ChevronDown size={12} />
-                    )}
-                  </Button>
-                )}
-              </div>
-            )}
+    <div className="relative group">
+      {/* Copy Button */}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={handleCopy}
+        className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-700/80 hover:bg-slate-600/80 text-slate-300 h-7 w-7 p-0 rounded-full"
+      >
+        {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+      </Button>
 
-            {/* Content section */}
-            {isExpanded ? (
-              <div className="prose prose-sm max-w-none">
-                {children ? (
-                  children
-                ) : content ? (
-                  <div
-                    className={cn(
-                      'whitespace-pre-wrap break-words',
-                      isUser ? 'text-primary-foreground' : 'text-foreground'
-                    )}
-                  >
-                    {content}
+      {/* Message Content */}
+      <div className="prose prose-invert prose-sm max-w-none">
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm, remarkMath]}
+          rehypePlugins={[
+            [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer'] }],
+            rehypeKatex
+          ]}
+          components={{
+            // Code blocks
+            code({ node, inline, className, children, ...props }) {
+              const match = /language-(\w+)/.exec(className || '')
+              if (!inline) {
+                return (
+                  <div className="my-4 overflow-hidden rounded-xl border border-slate-600/50 bg-slate-900/50">
+                    <div className="flex items-center justify-between px-4 py-2 bg-slate-800/50 border-b border-slate-600/50">
+                      <span className="text-xs text-slate-400 font-mono">
+                        {match ? match[1] : 'code'}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigator.clipboard.writeText(String(children))}
+                        className="h-6 px-2 text-xs text-slate-400 hover:text-slate-200"
+                      >
+                        Copy
+                      </Button>
+                    </div>
+                    <SyntaxHighlighter
+                      style={oneDark}
+                      language={match ? match[1] : 'text'}
+                      PreTag="div"
+                      customStyle={{
+                        margin: 0,
+                        background: 'transparent',
+                        padding: '1rem',
+                        fontSize: '0.875rem'
+                      }}
+                    >
+                      {String(children).replace(/\n$/, '')}
+                    </SyntaxHighlighter>
                   </div>
-                ) : null}
+                )
+              }
+              return (
+                <code className="bg-slate-700/50 text-slate-200 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
+                  {children}
+                </code>
+              )
+            },
+            // Headings
+            h1: ({ children }) => <h1 className="text-xl font-bold text-slate-100 mb-3 mt-4">{children}</h1>,
+            h2: ({ children }) => <h2 className="text-lg font-semibold text-slate-100 mb-2 mt-3">{children}</h2>,
+            h3: ({ children }) => <h3 className="text-base font-semibold text-slate-200 mb-2 mt-3">{children}</h3>,
+            // Paragraphs
+            p: ({ children }) => <p className="text-slate-100 leading-relaxed mb-3">{children}</p>,
+            // Lists
+            ul: ({ children }) => <ul className="text-slate-100 space-y-1 mb-3 pl-4">{children}</ul>,
+            ol: ({ children }) => <ol className="text-slate-100 space-y-1 mb-3 pl-4">{children}</ol>,
+            li: ({ children }) => <li className="text-slate-100">{children}</li>,
+            // Links
+            a: ({ children, href }) => (
+              <a
+                href={href}
+                className="text-blue-400 hover:text-blue-300 underline decoration-blue-400/50 hover:decoration-blue-300"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {children}
+              </a>
+            ),
+            // Tables
+            table: ({ children }) => (
+              <div className="overflow-x-auto my-4">
+                <table className="w-full border-collapse border border-slate-600/50 rounded-lg overflow-hidden">
+                  {children}
+                </table>
               </div>
-            ) : (
-              <div className="text-sm text-muted-foreground">
-                Click to expand message
-              </div>
-            )}
-          </div>
+            ),
+            th: ({ children }) => (
+              <th className="border border-slate-600/50 bg-slate-800/50 px-3 py-2 text-left text-slate-200 font-semibold">
+                {children}
+              </th>
+            ),
+            td: ({ children }) => (
+              <td className="border border-slate-600/50 px-3 py-2 text-slate-100">
+                {children}
+              </td>
+            ),
+            // Blockquotes
+            blockquote: ({ children }) => (
+              <blockquote className="border-l-4 border-blue-500/50 pl-4 py-2 my-4 bg-slate-800/30 rounded-r-lg">
+                <div className="text-slate-200 italic">{children}</div>
+              </blockquote>
+            )
+          }}
+        >
+          {displayContent}
+        </ReactMarkdown>
+      </div>
 
-          {!isUser && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleCopy}
-              className="h-8 w-8 p-0 flex-shrink-0"
-            >
-              {copied ? (
-                <Check size={14} className="text-green-500" />
-              ) : (
-                <Copy size={14} />
-              )}
-            </Button>
+      {/* Expand/Collapse Button */}
+      {isCollapsible && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="mt-2 text-slate-400 hover:text-slate-200 h-8 px-3"
+        >
+          {isExpanded ? (
+            <>
+              <ChevronUp className="h-4 w-4 mr-1" />
+              Show Less
+            </>
+          ) : (
+            <>
+              <ChevronDown className="h-4 w-4 mr-1" />
+              Show More
+            </>
           )}
-        </div>
-      </CardContent>
-    </Card>
+        </Button>
+      )}
+    </div>
   )
 }

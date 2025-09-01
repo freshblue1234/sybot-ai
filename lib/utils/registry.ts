@@ -7,9 +7,9 @@ import { groq } from '@ai-sdk/groq'
 import { createOpenAI, openai } from '@ai-sdk/openai'
 import { xai } from '@ai-sdk/xai'
 import {
-  experimental_createProviderRegistry as createProviderRegistry,
-  extractReasoningMiddleware,
-  wrapLanguageModel
+    experimental_createProviderRegistry as createProviderRegistry,
+    extractReasoningMiddleware,
+    wrapLanguageModel
 } from 'ai'
 import 'dotenv/config'
 import { createOllama } from 'ollama-ai-provider'
@@ -91,30 +91,30 @@ export function getModel(model: string) {
 export function isProviderEnabled(providerId: string): boolean {
   switch (providerId) {
     case 'openai':
-      return !!process.env.OPENAI_API_KEY
+      return !!process.env.OPENAI_API_KEY || true // Enable demo mode
     case 'anthropic':
-      return !!process.env.ANTHROPIC_API_KEY
+      return !!process.env.ANTHROPIC_API_KEY || true // Enable demo mode
     case 'google':
-      return !!process.env.GOOGLE_GENERATIVE_AI_API_KEY
+      return !!process.env.GOOGLE_GENERATIVE_AI_API_KEY || true // Enable demo mode
     case 'groq':
-      return !!process.env.GROQ_API_KEY
+      return !!process.env.GROQ_API_KEY || true // Enable demo mode
     case 'ollama':
-      return !!process.env.OLLAMA_BASE_URL
+      return !!process.env.OLLAMA_BASE_URL || true // Enable demo mode
     case 'azure':
-      return !!process.env.AZURE_API_KEY && !!process.env.AZURE_RESOURCE_NAME
+      return !!process.env.AZURE_API_KEY && !!process.env.AZURE_RESOURCE_NAME || true // Enable demo mode
     case 'deepseek':
-      return !!process.env.DEEPSEEK_API_KEY
+      return !!process.env.DEEPSEEK_API_KEY || true // Enable demo mode
     case 'fireworks':
-      return !!process.env.FIREWORKS_API_KEY
+      return !!process.env.FIREWORKS_API_KEY || true // Enable demo mode
     case 'xai':
-      return !!process.env.XAI_API_KEY
+      return !!process.env.XAI_API_KEY || true // Enable demo mode
     case 'openai-compatible':
       return (
         !!process.env.OPENAI_COMPATIBLE_API_KEY &&
         !!process.env.OPENAI_COMPATIBLE_API_BASE_URL
-      )
+      ) || true // Enable demo mode
     default:
-      return false
+      return true // Enable all providers in demo mode
   }
 }
 

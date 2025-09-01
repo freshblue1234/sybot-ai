@@ -71,11 +71,11 @@ export function ModelSelector({ models }: ModelSelectorProps) {
   )
 
   const selectedModel = useMemo(
-    () => models.find(model => createModelId(model) === value),
+    () => models?.find(model => createModelId(model) === value),
     [models, value]
   )
 
-  const groupedModels = useMemo(() => groupModelsByProvider(models), [models])
+  const groupedModels = useMemo(() => groupModelsByProvider(models || []), [models])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

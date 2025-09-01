@@ -3,22 +3,22 @@
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from '@/components/ui/popover'
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { useVoice } from '@/contexts/voice-context'
 import { cn } from '@/lib/utils'
-import { Mic, MicOff, Settings, Volume2, VolumeX } from 'lucide-react'
+import { Mic, Settings, Volume2 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 interface VoiceControlsProps {
@@ -36,14 +36,8 @@ function VoiceControlsClient({ onVoiceInput }: VoiceControlsProps) {
   if (!isMounted) {
     return (
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="icon" className="h-8 w-8 lg:h-9 lg:w-9" disabled>
-          <Mic size={16} />
-        </Button>
-        <Button variant="outline" size="icon" className="h-8 w-8 lg:h-9 lg:w-9" disabled>
-          <Volume2 size={16} />
-        </Button>
-        <Button variant="outline" size="icon" className="h-8 w-8 lg:h-9 lg:w-9" disabled>
-          <Settings size={16} />
+        <Button variant="outline" size="icon" className="h-11 w-11 p-0 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300" disabled>
+          <Volume2 className="w-5 h-5" />
         </Button>
       </div>
     )
@@ -155,6 +149,8 @@ function VoiceControlsInner({ onVoiceInput }: VoiceControlsProps) {
 
   const recognitionRef = useRef<SpeechRecognition | null>(null)
   const onVoiceInputRef = useRef(onVoiceInput)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [lastResponse, setLastResponse] = useState<string>('')
 
   // Initialize speech recognition
   const initSpeechRecognition = useCallback(() => {
@@ -176,6 +172,7 @@ function VoiceControlsInner({ onVoiceInput }: VoiceControlsProps) {
 
       recognition.onstart = () => {
         setIsListening(true)
+        setIsProcessing(true)
       }
 
       recognition.onresult = (event) => {
@@ -194,16 +191,19 @@ function VoiceControlsInner({ onVoiceInput }: VoiceControlsProps) {
         if (finalTranscript) {
           onVoiceInputRef.current(finalTranscript)
           recognition.stop()
+          // Auto-speak will be handled by the chat response
         }
       }
 
       recognition.onerror = (event) => {
         console.error('Speech recognition error:', event.error)
         setIsListening(false)
+        setIsProcessing(false)
       }
 
       recognition.onend = () => {
         setIsListening(false)
+        setIsProcessing(false)
       }
     } catch (error) {
       console.error('Error initializing speech recognition:', error)
@@ -232,31 +232,39 @@ function VoiceControlsInner({ onVoiceInput }: VoiceControlsProps) {
     return () => clearTimeout(timer)
   }, [initSpeechRecognition])
 
-  const startListening = () => {
-    if (recognitionRef.current && !isListening && typeof window !== 'undefined') {
+  const startVoiceInteraction = () => {
+    if (recognitionRef.current && !isListening && !isSpeaking && typeof window !== 'undefined') {
       try {
         recognitionRef.current.start()
       } catch (error) {
         console.error('Error starting speech recognition:', error)
         setIsListening(false)
+        setIsProcessing(false)
       }
     }
   }
 
-  const stopListening = () => {
-    if (recognitionRef.current && isListening && typeof window !== 'undefined') {
+  const stopVoiceInteraction = () => {
+    if (isListening && recognitionRef.current) {
       try {
         recognitionRef.current.stop()
       } catch (error) {
         console.error('Error stopping speech recognition:', error)
-        setIsListening(false)
       }
     }
+    if (isSpeaking) {
+      stopSpeaking()
+    }
+    setIsProcessing(false)
   }
 
-  const handleSpeakTest = () => {
-    speakText("Hello! I'm ready to help you.")
-  }
+  // Function to speak the AI response
+  const speakResponse = useCallback((text: string) => {
+    if (text && text !== lastResponse) {
+      setLastResponse(text)
+      speakText(text)
+    }
+  }, [speakText, lastResponse])
 
   if (!isSupported) {
     return (
@@ -266,38 +274,29 @@ function VoiceControlsInner({ onVoiceInput }: VoiceControlsProps) {
     )
   }
 
+  const isActive = isListening || isSpeaking || isProcessing
+
   return (
     <div className="flex items-center gap-2">
-      {/* Voice Input Button */}
+      {/* Unified Sound Button */}
       <Button
         variant="outline"
         size="icon"
-        onClick={isListening ? stopListening : startListening}
-        disabled={isSpeaking}
+        onClick={isActive ? stopVoiceInteraction : startVoiceInteraction}
         className={cn(
-          "h-8 w-8 lg:h-9 lg:w-9 transition-all duration-200",
-          isListening 
-            ? "bg-red-500 text-white hover:bg-red-600 animate-pulse" 
-            : "hover:bg-muted/50"
+          "h-11 w-11 p-0 rounded-2xl transition-all duration-200",
+          isActive
+            ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg animate-pulse" 
+            : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
         )}
       >
-        {isListening ? <MicOff size={16} /> : <Mic size={16} />}
-      </Button>
-
-      {/* Voice Output Button */}
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={isSpeaking ? stopSpeaking : handleSpeakTest}
-        disabled={isListening}
-        className={cn(
-          "h-8 w-8 lg:h-9 lg:w-9 transition-all duration-200",
-          isSpeaking 
-            ? "bg-blue-500 text-white hover:bg-blue-600" 
-            : "hover:bg-muted/50"
+        {isListening ? (
+          <Mic className="w-5 h-5" />
+        ) : isSpeaking ? (
+          <Volume2 className="w-5 h-5" />
+        ) : (
+          <Volume2 className="w-5 h-5" />
         )}
-      >
-        {isSpeaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
       </Button>
 
       {/* Voice Settings */}
@@ -306,14 +305,14 @@ function VoiceControlsInner({ onVoiceInput }: VoiceControlsProps) {
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8 lg:h-9 lg:w-9 hover:bg-muted/50"
+            className="h-8 w-8 lg:h-9 lg:w-9 hover:bg-gray-700 border-gray-600 bg-gray-800 text-white"
           >
             <Settings size={16} />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 p-4" align="end">
+        <PopoverContent className="w-80 p-4 bg-gray-900 border-gray-700" align="end">
           <div className="space-y-4">
-            <h3 className="font-semibold text-sm">Voice Settings</h3>
+            <h3 className="font-semibold text-sm text-white">Voice Settings</h3>
             
             {/* Recognition Language */}
             <div className="space-y-2">

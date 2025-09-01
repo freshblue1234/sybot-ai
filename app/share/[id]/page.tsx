@@ -1,54 +1,50 @@
 import { Chat } from '@/components/chat'
-import { getSharedChat } from '@/lib/actions/chat'
+import { getChat } from '@/lib/actions/chat'
 import { getModels } from '@/lib/config/models'
 import { convertToUIMessages } from '@/lib/utils'
 import { notFound } from 'next/navigation'
 
-export async function generateMetadata(props: {
-  params: Promise<{ id: string }>
-}) {
-  try {
-    const { id } = await props.params
-    const chat = await getSharedChat(id)
-
-    if (!chat || !chat.sharePath) {
-      return {
-        title: 'Chat Not Found'
-      }
-    }
-
-    return {
-      title: chat?.title?.toString().slice(0, 50) || 'Shared Chat'
-    }
-  } catch (error) {
-    console.warn('Error generating metadata for shared chat:', error)
-    return {
-      title: 'Shared Chat'
-    }
-  }
+interface SharePageProps {
+  params: Promise<{
+    id: string
+  }>
 }
 
-export default async function SharePage(props: {
-  params: Promise<{ id: string }>
-}) {
-  try {
-    const { id } = await props.params
-    const chat = await getSharedChat(id)
+export default async function SharePage({ params }: SharePageProps) {
+  const { id } = await params
 
-    if (!chat || !chat.sharePath) {
-      return notFound()
+  try {
+    const chat = await getChat(id)
+    if (!chat) {
+      notFound()
     }
 
+    const messages = convertToUIMessages(chat.messages || [])
     const models = await getModels()
+    
+    // Select default model - prioritize working OpenAI models
+    let defaultModel = models.find(model => 
+      model.id === 'gpt-4o-mini' || 
+      model.id === 'gpt-4o' || 
+      model.id === 'gpt-4.1-mini' ||
+      model.provider === 'openai'
+    )
+    
+    // Fallback to first available model if no OpenAI models found
+    if (!defaultModel && models.length > 0) {
+      defaultModel = models[0]
+    }
+
     return (
       <Chat
         id={chat.id}
-        savedMessages={convertToUIMessages(chat.messages)}
+        initialMessages={messages}
         models={models}
+        defaultModel={defaultModel}
       />
     )
   } catch (error) {
-    console.error('Error loading shared chat:', error)
-    return notFound()
+    console.error('Error loading share page:', error)
+    notFound()
   }
 }
